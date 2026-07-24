@@ -15,7 +15,7 @@ const FLOOR_IMAGES = {
   floor_5F: f5,
 }
 
-const PIN_TYPES = ['room', 'stamp', 'branch', 'entrance', 'stairs']
+const PIN_TYPES = ['room', 'stamp', 'entrance', 'stairs']
 
 export default function MapView({ points, activeFloor, highlightedId, onSelectRoom, routePoints }) {
   const containerRef = useRef(null)
@@ -36,7 +36,7 @@ export default function MapView({ points, activeFloor, highlightedId, onSelectRo
     img.src = src
   }, [src])
 
-  const floorPoints = points.filter((p) => p.floor === activeFloor)
+  const floorPoints = points.filter((p) => p.floor === activeFloor && p.type !== 'branch')
 
   const frameStyle = naturalSize
     ? { aspectRatio: `${naturalSize.w} / ${naturalSize.h}` }
@@ -44,10 +44,7 @@ export default function MapView({ points, activeFloor, highlightedId, onSelectRo
 
   return (
     <div className="map-frame" style={frameStyle} ref={containerRef}>
-      <span className="crop tl" />
-      <span className="crop tr" />
-      <span className="crop bl" />
-      <span className="crop br" />
+      
       <div className="map-canvas-wrap">
         {naturalSize && (
           <TransformWrapper
@@ -124,7 +121,6 @@ export function MapLegend() {
   const labels = {
     room: '教室',
     stamp: 'スタンプ対象',
-    branch: '分岐点',
     entrance: '入口',
     stairs: '階段 / EV',
   }

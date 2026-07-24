@@ -8,6 +8,7 @@ import MapView, { MapLegend } from '../components/MapView.jsx'
 import RoomInfoModal from '../components/RoomInfoModal.jsx'
 import StampProgress from '../components/StampProgress.jsx'
 import { getStamps } from '../utils/stamps.js'
+import HomeImg from "../assets/image.png"
 
 const FLOOR_LABELS = {
   floor_1F: '1F',
@@ -79,12 +80,14 @@ export default function Home() {
 
   return (
     <>
+      <div className='titleContent'>
+        <img src={HomeImg} alt="" className='Homeimg'/>
+        <h1 className='title'>Welcome to ASK!</h1>
+      </div>
       <section className="hero">
-        <span className="crop tl" />
-        <span className="crop br" />
         <h2 className="hero-title">ようこそ、学校説明会へ</h2>
         <p className="hero-sub">
-          校内マップで教室の場所を確認できます。気になる教室を検索するか、マップ上のマーカーをタップしてください。
+          校内マップで教室の場所を確認できます教室を検索するか、マップ上のマーカーをタップしてください。
         </p>
       </section>
 
