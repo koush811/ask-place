@@ -1,0 +1,39 @@
+[
+  { "from": "ENT1F", "to": "STA1F" },
+  { "from": "ENT1F", "to": "E301F1" },
+  { "from": "STA1F", "to": "N103" },
+  { "from": "N103", "to": "N102" },
+  { "from": "N102", "to": "N101" },
+  { "from": "STA1F", "to": "S102" },
+  { "from": "S102", "to": "S101" },
+
+  { "from": "STA2F", "to": "N204" },
+  { "from": "N204", "to": "N200" },
+  { "from": "STA2F", "to": "S201" },
+  { "from": "S201", "to": "S203" },
+  { "from": "STA2F", "to": "E201" },
+
+  { "from": "STA3F", "to": "N304" },
+  { "from": "N304", "to": "N301" },
+  { "from": "STA3F", "to": "S302" },
+  { "from": "STA3F", "to": "S310" },
+  { "from": "STA3F", "to": "E301F3" },
+
+  { "from": "N007", "to": "N008" },
+  { "from": "N008", "to": "N006" },
+  { "from": "N008", "to": "N003" },
+  { "from": "N003", "to": "N004" },
+  { "from": "N004", "to": "N005" },
+  { "from": "N006", "to": "N401" },
+  { "from": "N401", "to": "S401" },
+  { "from": "S401", "to": "S402B" },
+  { "from": "N006", "to": "E401" },
+
+  { "from": "STA5F", "to": "N505" },
+  { "from": "N505", "to": "N501" },
+
+  { "from": "STA1F", "to": "STA2F", "crossFloor": true },
+  { "from": "STA2F", "to": "STA3F", "crossFloor": true },
+  { "from": "STA3F", "to": "N006", "crossFloor": true },
+  { "from": "N006", "to": "STA5F", "crossFloor": true }
+]
