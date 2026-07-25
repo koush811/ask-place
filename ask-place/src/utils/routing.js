@@ -3,13 +3,20 @@
  * nodes/edges を渡すとダイクストラ法で最短経路を返す。
  *
  * edges を用意できない場合は autoGenerateEdges() で campus_map_data.json の
- * 座標(x, y)と type だけから接続関係を自動推定できる。
+ * データだけから接続関係を自動推定できる。
  *  - 各フロアの branch / stairs / entrance を「廊下の骨格」とみなし、
- *    最小全域木(MST)で互いに接続する
+ *    近傍数点(KNN)+ 最小全域木(MST)で互いに接続する(同フロア内のみ)
  *  - room / stamp は同じフロアの最も近い骨格ノードに接続する
- *  - 階段(stairs)同士は階層順(1F→2F→3F…)に最も近いもの同士を自動接続する
- * ※ 直線距離ベースの近似なので、壁を迂回するような実際の廊下形状までは
- *   再現できません。より正確な経路が必要な場合は手動で edges を用意してください。
+ *  - 階段(stairs)の階をまたぐ接続は座標の近さでは"推測しない"。
+ *    stairs ノードの `name`(A, B, C…のような階段の識別名)が完全一致するもの
+ *    同士だけを、フロア順に隣接させて接続する。
+ *    間の階に同じ name の階段が無い(=階が飛んでいる)場合は接続しない
+ *    (=「この階段はこの階までしか繋がっていない」を安全側で表現できる)。
+ *
+ * 例:
+ *   { "id": "N054", "floor": "floor_4F", "x": 641, "y": 25, "name": "A", "type": "stairs" }
+ *   { "id": "N099", "floor": "floor_5F", "x": 643, "y": 24, "name": "A", "type": "stairs" }
+ *   ( → どちらも name: "A" で 4F・5F が隣接フロアなので接続される )
  */
 
 const CROSS_FLOOR_WEIGHT = 80 // 階段/EV移動のコスト(調整可能)
@@ -44,6 +51,58 @@ function mstEdges(nodes) {
 }
 
 /**
+ * 各ノードを最も近いk個のノードに接続するedgeを返す(近傍グラフ)。
+ * MSTは「木」なので2点間の経路が1本しかなく遠回りになりがちなため、
+ * これを併用して実際の廊下に近い複数の経路候補をダイクストラ法に与える。
+ */
+function knnEdges(nodes, k) {
+  const edges = []
+  nodes.forEach((a) => {
+    const nearest = nodes
+      .filter((b) => b.id !== a.id)
+      .map((b) => ({ to: b.id, d: dist(a, b) }))
+      .sort((x, y) => x.d - y.d)
+      .slice(0, k)
+    nearest.forEach((n) => edges.push({ from: a.id, to: n.to }))
+  })
+  return edges
+}
+
+/**
+ * 同じ name(A, B, C…のような階段の識別名)を持つ stairs ノード同士を、
+ * フロア順に隣接するものだけ接続する。座標の近さによる推測は一切行わない
+ * (誤接続を避けるため)。name が無い stairs ノードは対象外。
+ */
+function stairNameEdges(nodes) {
+  const edges = []
+  const stairs = nodes.filter((n) => n.type === 'stairs' && n.name)
+
+  const groups = new Map()
+  stairs.forEach((n) => {
+    if (!groups.has(n.name)) groups.set(n.name, [])
+    groups.get(n.name).push(n)
+  })
+
+  groups.forEach((groupNodes) => {
+    const sorted = groupNodes
+      .slice()
+      .sort((a, b) => FLOOR_ORDER.indexOf(a.floor) - FLOOR_ORDER.indexOf(b.floor))
+
+    for (let i = 0; i < sorted.length - 1; i += 1) {
+      const a = sorted[i]
+      const b = sorted[i + 1]
+      const aIdx = FLOOR_ORDER.indexOf(a.floor)
+      const bIdx = FLOOR_ORDER.indexOf(b.floor)
+      // 同じnameでも階が飛んでいる(間の階にその階段が無い)場合は接続しない
+      if (bIdx - aIdx !== 1) continue
+      edges.push({ from: a.id, to: b.id, crossFloor: true })
+    }
+  })
+
+  return edges
+}
+
+/**
  * campus_map_data.json のノード配列だけから edges を自動生成する。
  * @param {Array} nodes
  * @returns {Array} edges
@@ -57,8 +116,10 @@ function autoGenerateEdges(nodes) {
     const hubs = floorNodes.filter((n) => HUB_TYPES.includes(n.type))
     const leaves = floorNodes.filter((n) => LEAF_TYPES.includes(n.type))
 
-    // 骨格(分岐点・階段・入口)同士をMSTで接続
+    // 骨格(分岐点・階段・入口)同士を同フロア内で接続:
+    // 近傍数点(KNN)で実際の廊下に近い複数経路を作りつつ、MSTで連結性も保証する
     if (hubs.length >= 2) {
+      edges.push(...knnEdges(hubs, Math.min(3, hubs.length - 1)))
       edges.push(...mstEdges(hubs))
     }
 
@@ -74,19 +135,8 @@ function autoGenerateEdges(nodes) {
     })
   })
 
-  // 階段(stairs)を階層順に最も近いもの同士で接続(縦の移動経路)
-  for (let i = 0; i < FLOOR_ORDER.length - 1; i += 1) {
-    const lower = nodes.filter((n) => n.floor === FLOOR_ORDER[i] && n.type === 'stairs')
-    const upper = nodes.filter((n) => n.floor === FLOOR_ORDER[i + 1] && n.type === 'stairs')
-    lower.forEach((a) => {
-      let nearest = null
-      upper.forEach((b) => {
-        const d = dist(a, b)
-        if (!nearest || d < nearest.d) nearest = { to: b.id, d }
-      })
-      if (nearest) edges.push({ from: a.id, to: nearest.to, crossFloor: true })
-    })
-  }
+  // 階をまたぐ接続は座標での推測をやめ、明示的な name 一致のみで行う
+  edges.push(...stairNameEdges(nodes))
 
   return edges
 }
