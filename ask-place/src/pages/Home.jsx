@@ -8,18 +8,12 @@ import MapView, { MapLegend } from '../components/MapView.jsx'
 import RoomInfoModal from '../components/RoomInfoModal.jsx'
 import StampProgress from '../components/StampProgress.jsx'
 import { getStamps } from '../utils/stamps.js'
-import Homeimg from "../assets/image.png"
+import HomeImg from '../assets/imgs/image.png'
 
-const FLOOR_LABELS = {
-  floor_1F: '1F',
-  floor_2F: '2F',
-  floor_3F: '3F',
-  floor_4F: '4F',
-  floor_5F: '5F',
-}
+const { nodes, zones, floorOrder, floorLabels } = mapData
 
 export default function Home() {
-  const [activeFloor, setActiveFloor] = useState('floor_1F')
+  const [activeFloor, setActiveFloor] = useState(floorOrder[0])
   const [highlightedId, setHighlightedId] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
   const [collected, setCollected] = useState(getStamps())
@@ -30,7 +24,7 @@ export default function Home() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const stampRooms = mapData.filter((p) => p.type === 'stamp')
+  const stampRooms = nodes.filter((p) => p.type === 'stamp')
 
   // 経路検索中は、その経路が実際に通る階だけをフロア切替に表示する
   const routeFloors = routeSegments.length > 0 ? routeSegments.map((seg) => seg.floor) : null
@@ -94,24 +88,22 @@ export default function Home() {
 
   return (
     <>
-      <div className='titleContent'>
-        <img src={Homeimg} alt="" className='Homeimg' />
-        <div className='title'>Welcome to ASK!</div>
-        <div className='wrap'></div>
+      <div className='TitleContent'>
+        <img src={HomeImg} alt="" className='HomeImg'/>
+        <h1 className='title'>Welcome to ASK!</h1>
       </div>
+      
       <section className="hero">
-        <span className="crop tl" />
-        <span className="crop br" />
         <h2 className="hero-title">ようこそ、学校説明会へ</h2>
         <p className="hero-sub">
           校内マップで教室の場所を確認できます。気になる教室を検索するか、マップ上のマーカーをタップしてください。
         </p>
       </section>
 
-      <SearchForm points={mapData} onSelectRoom={handleSelectRoom} />
+      <SearchForm points={nodes} floorLabels={floorLabels} onSelectRoom={handleSelectRoom} />
 
       <RouteFinder
-        points={mapData}
+        mapData={mapData}
         onRouteComputed={handleRouteComputed}
         onClear={handleClearRoute}
       />
@@ -119,12 +111,15 @@ export default function Home() {
       <FloorSelector
         activeFloor={activeFloor}
         onChange={handleFloorChange}
+        floorOrder={floorOrder}
+        floorLabels={floorLabels}
         availableFloors={routeFloors}
       />
 
       <section className="map-section">
         <MapView
-          points={mapData}
+          points={nodes}
+          zones={zones}
           activeFloor={activeFloor}
           highlightedId={highlightedId}
           onSelectRoom={handleSelectRoom}
@@ -143,7 +138,7 @@ export default function Home() {
               ← 前の階
             </button>
             <span className="step-label">
-              {FLOOR_LABELS[routeSegments[segmentIndex].floor]}
+              {floorLabels[routeSegments[segmentIndex].floor]}
               {' '}({segmentIndex + 1}/{routeSegments.length})
             </span>
             <button

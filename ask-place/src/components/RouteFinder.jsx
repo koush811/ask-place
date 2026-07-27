@@ -1,15 +1,9 @@
 import { useMemo, useState } from 'react'
 import { findRoute } from '../utils/routing.js'
 
-const FLOOR_LABELS = {
-  floor_1F: '1F',
-  floor_2F: '2F',
-  floor_3F: '3F',
-  floor_4F: '4F',
-  floor_5F: '5F',
-}
+export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
+  const { nodes, floorLabels } = mapData
 
-export default function RouteFinder({ points, onRouteComputed, onClear }) {
   const [startQuery, setStartQuery] = useState('')
   const [startId, setStartId] = useState('')
   const [endQuery, setEndQuery] = useState('')
@@ -18,11 +12,11 @@ export default function RouteFinder({ points, onRouteComputed, onClear }) {
 
   const options = useMemo(
     () =>
-      points
+      nodes
         .filter((p) => p.type === 'room' || p.type === 'stamp' || p.type === 'entrance')
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name, 'ja')),
-    [points],
+    [nodes],
   )
 
   const startResults = useMemo(() => {
@@ -70,9 +64,9 @@ export default function RouteFinder({ points, onRouteComputed, onClear }) {
       setError('出発地と目的地が同じです')
       return
     }
-    const result = findRoute(points, undefined, startId, endId)
+    const result = findRoute(mapData, startId, endId)
     if (!result.reachable) {
-      setError('経路が見つかりません')
+      setError('経路が見つかりません(通行不可エリアを経由する必要がある場合も含む)')
       onClear()
       return
     }
@@ -114,7 +108,7 @@ export default function RouteFinder({ points, onRouteComputed, onClear }) {
                 onClick={() => pickStart(p)}
               >
                 <span>{p.name}</span>
-                <span className="floor-tag">{FLOOR_LABELS[p.floor]}</span>
+                <span className="floor-tag">{floorLabels[p.floor]}</span>
               </button>
             ))}
           </div>
@@ -146,7 +140,7 @@ export default function RouteFinder({ points, onRouteComputed, onClear }) {
                 onClick={() => pickEnd(p)}
               >
                 <span>{p.name}</span>
-                <span className="floor-tag">{FLOOR_LABELS[p.floor]}</span>
+                <span className="floor-tag">{floorLabels[p.floor]}</span>
               </button>
             ))}
           </div>

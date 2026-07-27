@@ -17,7 +17,7 @@ const FLOOR_IMAGES = {
 
 const PIN_TYPES = ['room', 'stamp', 'entrance', 'stairs']
 
-export default function MapView({ points, activeFloor, highlightedId, onSelectRoom, routePoints }) {
+export default function MapView({ points, zones = [], activeFloor, highlightedId, onSelectRoom, routePoints }) {
   const containerRef = useRef(null)
   const [naturalSize, setNaturalSize] = useState(null)
   const [fitScale, setFitScale] = useState(1)
@@ -37,6 +37,7 @@ export default function MapView({ points, activeFloor, highlightedId, onSelectRo
   }, [src])
 
   const floorPoints = points.filter((p) => p.floor === activeFloor && p.type !== 'branch')
+  const floorZones = zones.filter((z) => z.floor === activeFloor)
 
   const frameStyle = naturalSize
     ? { aspectRatio: `${naturalSize.w} / ${naturalSize.h}` }
@@ -44,7 +45,6 @@ export default function MapView({ points, activeFloor, highlightedId, onSelectRo
 
   return (
     <div className="map-frame" style={frameStyle} ref={containerRef}>
-      
       <div className="map-canvas-wrap">
         {naturalSize && (
           <TransformWrapper
@@ -52,8 +52,6 @@ export default function MapView({ points, activeFloor, highlightedId, onSelectRo
             initialScale={fitScale}
             minScale={fitScale}
             maxScale={fitScale * 4}
-            centerOnInit
-            centerZoomedOut
             limitToBounds
             wheel={{ step: 0.15 }}
             doubleClick={{ mode: 'zoomIn' }}
@@ -67,6 +65,33 @@ export default function MapView({ points, activeFloor, highlightedId, onSelectRo
                 style={{ width: naturalSize.w, height: naturalSize.h }}
               >
                 <img src={src} alt={`${activeFloor} フロアマップ`} draggable={false} />
+                {floorZones.length > 0 && (
+                  <svg
+                    className="zone-overlay"
+                    width={naturalSize.w}
+                    height={naturalSize.h}
+                    viewBox={`0 0 ${naturalSize.w} ${naturalSize.h}`}
+                  >
+                    {floorZones.map((z) => (
+                      <g key={z.id}>
+                        <polygon
+                          points={z.points.map((p) => `${p.x},${p.y}`).join(' ')}
+                          className="zone-polygon"
+                        />
+                        {z.label && (
+                          <text
+                            x={z.points.reduce((s, p) => s + p.x, 0) / z.points.length}
+                            y={z.points.reduce((s, p) => s + p.y, 0) / z.points.length}
+                            className="zone-label"
+                            textAnchor="middle"
+                          >
+                            {z.label}
+                          </text>
+                        )}
+                      </g>
+                    ))}
+                  </svg>
+                )}
                 {routePoints && routePoints.length > 1 && (
                   <svg
                     className="route-overlay"

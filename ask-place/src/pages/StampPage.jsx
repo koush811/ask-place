@@ -3,12 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import mapData from '../data/campus_map_data.json'
 import { addStamp, getStamps } from '../utils/stamps.js'
 
+const { nodes } = mapData
+
 export default function StampPage() {
   const { token } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
-    const room = mapData.find(
+    const room = nodes.find(
       (p) => p.type === 'stamp' && p.stampToken === decodeURIComponent(token || ''),
     )
 
@@ -21,7 +23,7 @@ export default function StampPage() {
     }
 
     const { added, stamps } = addStamp(room.name)
-    const totalStampRooms = mapData.filter((p) => p.type === 'stamp').length
+    const totalStampRooms = nodes.filter((p) => p.type === 'stamp').length
     const allDone = stamps.length >= totalStampRooms
 
     let toast
