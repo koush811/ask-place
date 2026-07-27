@@ -8,17 +8,12 @@ import MapView, { MapLegend } from '../components/MapView.jsx'
 import RoomInfoModal from '../components/RoomInfoModal.jsx'
 import StampProgress from '../components/StampProgress.jsx'
 import { getStamps } from '../utils/stamps.js'
+import HomeImg from '../assets/imgs/image.png'
 
-const FLOOR_LABELS = {
-  floor_1F: '1F',
-  floor_2F: '2F',
-  floor_3F: '3F',
-  floor_4F: '4F',
-  floor_5F: '5F',
-}
+const { nodes, zones, floorOrder, floorLabels } = mapData
 
 export default function Home() {
-  const [activeFloor, setActiveFloor] = useState('floor_1F')
+  const [activeFloor, setActiveFloor] = useState(floorOrder[0])
   const [highlightedId, setHighlightedId] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
   const [collected, setCollected] = useState(getStamps())
@@ -29,7 +24,10 @@ export default function Home() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const stampRooms = mapData.filter((p) => p.type === 'stamp')
+  const stampRooms = nodes.filter((p) => p.type === 'stamp')
+
+  // 経路検索中は、その経路が実際に通る階だけをフロア切替に表示する
+  const routeFloors = routeSegments.length > 0 ? routeSegments.map((seg) => seg.floor) : null
 
   // Handle arrival from a QR code scan (/stamp/:roomNumber redirected here)
   useEffect(() => {
@@ -52,6 +50,9 @@ export default function Home() {
   }, [location.state])
 
   const handleSelectRoom = (room) => {
+    // 教室を新しく検索・選択したら経路表示はクリアする(全フロア表示に戻す)
+    setRouteSegments([])
+    setSegmentIndex(0)
     if (room.floor !== activeFloor) setActiveFloor(room.floor)
     setHighlightedId(room.id)
     setSelectedRoom(room)
@@ -74,33 +75,51 @@ export default function Home() {
     setActiveFloor(routeSegments[index].floor)
   }
 
+  const handleFloorChange = (floorKey) => {
+    setActiveFloor(floorKey)
+    if (routeSegments.length > 0) {
+      const idx = routeSegments.findIndex((seg) => seg.floor === floorKey)
+      if (idx !== -1) setSegmentIndex(idx)
+    }
+  }
+
   const routePointsForActiveFloor =
     routeSegments.find((seg) => seg.floor === activeFloor)?.points ?? null
 
   return (
     <>
+      <div className='TitleContent'>
+        <img src={HomeImg} alt="" className='HomeImg'/>
+        <h1 className='title'>Welcome to ASK!</h1>
+      </div>
+      
       <section className="hero">
-        <span className="crop tl" />
-        <span className="crop br" />
         <h2 className="hero-title">ようこそ、学校説明会へ</h2>
         <p className="hero-sub">
           校内マップで教室の場所を確認できます。気になる教室を検索するか、マップ上のマーカーをタップしてください。
         </p>
       </section>
 
-      <SearchForm points={mapData} onSelectRoom={handleSelectRoom} />
+      <SearchForm points={nodes} floorLabels={floorLabels} onSelectRoom={handleSelectRoom} />
 
       <RouteFinder
-        points={mapData}
+        mapData={mapData}
         onRouteComputed={handleRouteComputed}
         onClear={handleClearRoute}
       />
 
-      <FloorSelector activeFloor={activeFloor} onChange={setActiveFloor} />
+      <FloorSelector
+        activeFloor={activeFloor}
+        onChange={handleFloorChange}
+        floorOrder={floorOrder}
+        floorLabels={floorLabels}
+        availableFloors={routeFloors}
+      />
 
       <section className="map-section">
         <MapView
-          points={mapData}
+          points={nodes}
+          zones={zones}
           activeFloor={activeFloor}
           highlightedId={highlightedId}
           onSelectRoom={handleSelectRoom}
@@ -119,7 +138,7 @@ export default function Home() {
               ← 前の階
             </button>
             <span className="step-label">
-              {FLOOR_LABELS[routeSegments[segmentIndex].floor]}
+              {floorLabels[routeSegments[segmentIndex].floor]}
               {' '}({segmentIndex + 1}/{routeSegments.length})
             </span>
             <button

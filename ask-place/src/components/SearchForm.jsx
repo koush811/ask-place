@@ -1,14 +1,6 @@
 import { useMemo, useState } from 'react'
 
-const FLOOR_LABELS = {
-  floor_1F: '1F',
-  floor_2F: '2F',
-  floor_3F: '3F',
-  floor_4F: '4F',
-  floor_5F: '5F',
-}
-
-export default function SearchForm({ points, onSelectRoom }) {
+export default function SearchForm({ points, floorLabels, onSelectRoom }) {
   const [query, setQuery] = useState('')
 
   const searchable = useMemo(
@@ -51,7 +43,7 @@ export default function SearchForm({ points, onSelectRoom }) {
               }}
             >
               <span>{r.name}</span>
-              <span className="floor-tag">{FLOOR_LABELS[r.floor]}</span>
+              <span className="floor-tag">{floorLabels[r.floor]}</span>
             </button>
           ))}
         </div>

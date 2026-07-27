@@ -3,10 +3,10 @@
 :root {
   --ink: #14315c;
   --ink-deep: #0b1e3d;
-  --paper: #f6f4ee;
+  --paper: #FFF;
   --paper-line: #dfd9c8;
-  --accent: #e8752c;
-  --accent-deep: #c85c1a;
+  --accent: #e8bc2c;
+  --accent-deep: gray;
   --room: #f4c430;
   --stamp: #2f6fed;
   --branch: #9aa0a6;
@@ -55,7 +55,6 @@ input { font-family: inherit; }
   background: var(--ink);
   color: #fff;
   padding: 14px 18px;
-  position: sticky;
   top: 0;
   z-index: 40;
   border-bottom: 3px solid var(--accent);
@@ -93,13 +92,29 @@ input { font-family: inherit; }
 }
 
 /* ---------- Hero ---------- */
+
+.TitleContent{
+  position: relative;
+  
+}
+
+.title{
+  bottom: 10px;
+  right: 10px;
+  position: absolute;
+  z-index: 10;
+  color: white;
+  font-size: 50px;
+}
+
+.HomeImg{
+  width: 100%;
+}
+
+
 .hero {
   position: relative;
   padding: 22px 18px 16px;
-  background:
-    radial-gradient(circle at 85% -10%, rgba(232,117,44,0.16), transparent 55%),
-    var(--paper);
-  border-bottom: 1px solid var(--paper-line);
 }
 
 .hero .crop { position: absolute; width: 14px; height: 14px; border-color: var(--ink); opacity: 0.35; }
@@ -123,28 +138,19 @@ input { font-family: inherit; }
 /* ---------- Search ---------- */
 .search-block {
   padding: 16px 18px;
-  border-bottom: 1px solid var(--paper-line);
 }
 
 .search-label {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.1em;
   color: var(--accent-deep);
-  font-weight: 700;
+  font-weight: 1000;
   margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.search-label::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  background: var(--accent);
-  display: inline-block;
-  transform: rotate(45deg);
+  text-decoration: underline;
 }
 
 .search-input-wrap {
@@ -155,7 +161,7 @@ input { font-family: inherit; }
   width: 100%;
   padding: 12px 14px;
   font-size: 16px;
-  border: 2px solid var(--ink);
+  border: 1px solid var(--ink);
   border-radius: var(--radius);
   background: #fff;
   color: var(--ink-deep);
@@ -345,6 +351,32 @@ input { font-family: inherit; }
   font-family: var(--font-display);
 }
 
+/* ---------- Zone overlay (restricted areas) ---------- */
+.zone-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.zone-polygon {
+  fill: rgba(224, 64, 47, 0.18);
+  stroke: var(--danger);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.zone-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--danger);
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
 /* ---------- Route overlay (pathfinding) ---------- */
 .route-overlay {
   position: absolute;
@@ -379,28 +411,25 @@ input { font-family: inherit; }
   background: #fff;
 }
 
-.route-selects {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.route-input-group {
+  margin-bottom: 10px;
 }
 
-.route-select {
-  flex: 1;
-  min-width: 0;
-  padding: 11px 10px;
-  font-size: 14px;
-  border: 2px solid var(--ink);
-  border-radius: var(--radius);
-  background: #fff;
-  color: var(--ink-deep);
+.route-input-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #8a93a3;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-.route-arrow {
+.route-arrow-row {
+  text-align: center;
   font-family: var(--font-display);
   color: var(--accent-deep);
   font-weight: 700;
-  flex-shrink: 0;
+  margin: -2px 0 8px;
 }
 
 .route-actions {
