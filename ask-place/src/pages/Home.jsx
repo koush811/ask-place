@@ -8,11 +8,11 @@ import MapView, { MapLegend } from '../components/MapView.jsx'
 import RoomInfoModal from '../components/RoomInfoModal.jsx'
 import StampProgress from '../components/StampProgress.jsx'
 import { getStamps } from '../utils/stamps.js'
-import HomeImg from '../assets/imgs/image.png'
+import HomeImg from "../assets/imgs/image.png"
 
 const { nodes, zones, floorOrder, floorLabels } = mapData
 
-export default function Home() {
+export default function Home() { 
   const [activeFloor, setActiveFloor] = useState(floorOrder[0])
   const [highlightedId, setHighlightedId] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
@@ -88,11 +88,11 @@ export default function Home() {
 
   return (
     <>
+
       <div className='TitleContent'>
-        <img src={HomeImg} alt="" className='HomeImg'/>
-        <h1 className='title'>Welcome to ASK!</h1>
+          <img src={HomeImg} alt="" className='HomeImg'/>
+          <h1 className='title'>Welcome to ASK!</h1>
       </div>
-      
       <section className="hero">
         <h2 className="hero-title">ようこそ、学校説明会へ</h2>
         <p className="hero-sub">

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "reception_junior_high",
+    "name": "受付(附属中学校)",
+    "color": "#2ecc71",
+    "description": "附属中学校の受付です。まずはこちらにお越しください。",
+    "rooms": ["N550", "N405"]
+  },
+  {
+    "id": "construction",
+    "name": "建設科",
+    "color": "#e8752c",
+    "description": "建設科の展示・体験コーナーです。",
+    "rooms": ["N101", "C106"]
+  },
+  {
+    "id": "mechanical",
+    "name": "機械系学科",
+    "color": "#e0402f",
+    "description": "機械系学科の展示・体験コーナーです。",
+    "rooms": ["N109", "N110", "N111", "N112", "E108", "C111"]
+  },
+  {
+    "id": "electrical",
+    "name": "電気系学科",
+    "color": "#2f6fed",
+    "description": "電気系学科の展示・体験コーナーです。",
+    "rooms": ["N201", "N202", "N203", "N204", "C213", "C214"]
+  },
+  {
+    "id": "junior_high_briefing",
+    "name": "中学校説明会",
+    "color": "#9b59b6",
+    "description": "附属中学校の説明会を行います。",
+    "rooms": ["S212", "S213", "S214", "S215"]
+  },
+  {
+    "id": "principal_briefing",
+    "name": "校長説明会",
+    "color": "#f4c430",
+    "description": "校長による学校説明会を行います。",
+    "rooms": ["E202"]
+  },
+  {
+    "id": "alumni_career",
+    "name": "卒業生キャリアワーク",
+    "color": "#16a085",
+    "description": "卒業生によるキャリアに関するワークショップです。",
+    "rooms": ["E207"]
+  },
+  {
+    "id": "design_engineering",
+    "name": "デザイン工学科",
+    "color": "#ec4899",
+    "description": "デザイン工学科の展示・体験コーナーです。",
+    "rooms": ["S306", "S307", "S310", "S313", "S314"]
+  },
+  {
+    "id": "science_engineering",
+    "name": "理工科",
+    "color": "#8b5e3c",
+    "description": "理工科の展示・体験コーナーです。",
+    "rooms": [
+      "S402", "S403", "S404", "S405", "S406", "S407",
+      "S408", "S409", "S410", "S411", "S412", "S417", "S418"
+    ]
+  }
+]

@@ -1,10 +1,14 @@
 import { useMemo, useState } from 'react'
+import { isRoomVisible } from '../utils/activities.js'
 
 export default function SearchForm({ points, floorLabels, onSelectRoom }) {
   const [query, setQuery] = useState('')
 
   const searchable = useMemo(
-    () => points.filter((p) => p.type === 'room' || p.type === 'stamp'),
+    () =>
+      points.filter(
+        (p) => p.type === 'stamp' || (p.type === 'room' && isRoomVisible(p.name)),
+      ),
     [points],
   )
 
