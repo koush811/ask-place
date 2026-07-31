@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { findRoute } from '../utils/routing.js'
+import { isRoomVisible } from '../utils/activities.js'
 
 export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
   const { nodes, floorLabels } = mapData
@@ -13,7 +14,12 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
   const options = useMemo(
     () =>
       nodes
-        .filter((p) => p.type === 'room' || p.type === 'stamp' || p.type === 'entrance')
+        .filter(
+          (p) =>
+            p.type === 'stamp' ||
+            p.type === 'entrance' ||
+            (p.type === 'room' && isRoomVisible(p.name)),
+        )
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name, 'ja')),
     [nodes],

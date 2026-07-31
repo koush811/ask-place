@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+import { getActivityForRoom, isRoomVisible, activityData } from '../utils/activities.js'
 
 import f1 from '../map/F1.png'
 import f2 from '../map/F2.png'
@@ -14,8 +15,6 @@ const FLOOR_IMAGES = {
   floor_4F: f4,
   floor_5F: f5,
 }
-
-const PIN_TYPES = ['room', 'stamp', 'entrance', 'stairs']
 
 export default function MapView({ points, zones = [], activeFloor, highlightedId, onSelectRoom, routePoints }) {
   const containerRef = useRef(null)
@@ -36,7 +35,12 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
     img.src = src
   }, [src])
 
-  const floorPoints = points.filter((p) => p.floor === activeFloor && p.type !== 'branch')
+  const floorPoints = points.filter(
+    (p) =>
+      p.floor === activeFloor &&
+      p.type !== 'branch' &&
+      (p.type !== 'room' || isRoomVisible(p.name)),
+  )
   const floorZones = zones.filter((z) => z.floor === activeFloor)
 
   const frameStyle = naturalSize
@@ -53,6 +57,8 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
             minScale={fitScale}
             maxScale={fitScale * 4}
             limitToBounds
+            alignmentAnimation={{ disabled: true }}
+            velocityAnimation={{ disabled: true }}
             wheel={{ step: 0.15 }}
             doubleClick={{ mode: 'zoomIn' }}
           >
@@ -122,11 +128,17 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                 )}
                 {floorPoints.map((p) => {
                   const clickable = p.type === 'room' || p.type === 'stamp'
+                  const activity = p.type === 'room' ? getActivityForRoom(p.name) : null
+                  const pinStyle = {
+                    left: p.x,
+                    top: p.y,
+                    ...(activity ? { background: activity.color } : {}),
+                  }
                   return (
                     <div
                       key={p.id}
                       className={`map-pin type-${p.type}${highlightedId === p.id ? ' highlighted' : ''}`}
-                      style={{ left: p.x, top: p.y }}
+                      style={pinStyle}
                       onClick={clickable ? () => onSelectRoom(p) : undefined}
                       role={clickable ? 'button' : undefined}
                       aria-label={clickable ? p.name : undefined}
@@ -143,18 +155,23 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
 }
 
 export function MapLegend() {
-  const labels = {
-    room: '教室',
+  const otherLabels = {
     stamp: 'スタンプ対象',
     entrance: '入口',
     stairs: '階段 / EV',
   }
   return (
     <div className="map-legend">
-      {PIN_TYPES.map((t) => (
+      {activityData.map((act) => (
+        <span key={act.id}>
+          <i style={{ background: act.color, width: 9, height: 9, borderRadius: '50%', display: 'inline-block' }} />
+          {act.name}
+        </span>
+      ))}
+      {Object.entries(otherLabels).map(([t, label]) => (
         <span key={t}>
           <i className={`map-pin type-${t}`} style={{ position: 'static', transform: 'none' }} />
-          {labels[t]}
+          {label}
         </span>
       ))}
     </div>
