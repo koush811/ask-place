@@ -39,12 +39,14 @@ export default function RoomInfoModal({ room, onClose }) {
               <b>{activity.name}</b>
             </div>
           )}
+          {activity?.description && (
+            <div className="activity-note row" style={{ borderColor: activity.color }}>
+              <span>詳細</span>
+              <b>{activity.description}</b>
+            </div>
+          )}
         </div>
-        {activity?.description && (
-          <div className="activity-note" style={{ borderColor: activity.color }}>
-            {activity.description}
-          </div>
-        )}
+        
         {room.type === 'stamp' && (
           <div className="stamp-note">この教室はスタンプラリー対象です。設置されたQRコードを読み取るとスタンプを獲得できます。</div>
         )}

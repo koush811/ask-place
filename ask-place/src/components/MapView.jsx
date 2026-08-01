@@ -56,15 +56,15 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
             initialScale={fitScale}
             minScale={fitScale}
             maxScale={fitScale * 4}
-            limitToBounds
-            alignmentAnimation={{ disabled: true }}
-            velocityAnimation={{ disabled: true }}
-            wheel={{ step: 0.15 }}
-            doubleClick={{ mode: 'zoomIn' }}
+
+            limitToBounds={true}
+
+            panning={{
+              velocityDisabled: true
+            }}
           >
             <TransformComponent
               wrapperStyle={{ width: '100%', height: '100%' }}
-              contentStyle={{ width: '100%', height: '100%' }}
             >
               <div
                 className="map-image-layer"

@@ -257,6 +257,7 @@ input { font-family: inherit; }
 /* ---------- Map ---------- */
 .map-section {
   padding: 14px 18px 18px;
+  touch-action:none;
 }
 
 .map-frame {
@@ -266,6 +267,7 @@ input { font-family: inherit; }
   overflow: hidden;
   background: #fff;
   max-height: 78vh;
+  overflow: hidden;
   touch-action: none;
   overscroll-behavior: contain;
 }
@@ -279,7 +281,6 @@ input { font-family: inherit; }
 .map-canvas-wrap {
   width: 100%;
   height: 100%;
-  touch-action: none;
 }
 
 .map-image-layer {
@@ -302,7 +303,7 @@ input { font-family: inherit; }
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-.map-pin.type-room { background: var(--room); width: 14px; height: 14px; }
+.map-pin.type-room { background: var(--room); width: 18px; height: 18px; }
 .map-pin.type-stamp { background: var(--stamp); width: 14px; height: 14px; }
 .map-pin.type-branch { background: var(--branch); width: 9px; height: 9px; cursor: default; }
 .map-pin.type-entrance { background: var(--entrance); width: 12px; height: 12px; cursor: default; }
@@ -667,7 +668,11 @@ input { font-family: inherit; }
   border: 1px solid var(--accent);
 }
 
-@media (max-width: 380px) {
+@media (max-width: 500px) {
   .hero-title { font-size: 19px; }
   .site-header h1 { font-size: 17px; }
+
+  .title{
+    font-size: 35px;
+  }
 }

@@ -96,7 +96,7 @@ export default function Home() {
       <section className="hero">
         <h2 className="hero-title">ようこそ、学校説明会へ</h2>
         <p className="hero-sub">
-          校内マップで教室の場所を確認できます。気になる教室を検索するか、マップ上のマーカーをタップしてください。
+          校内マップで教室の場所を確認できます。教室を検索するか、マップ上のピンをタップしてください。
         </p>
       </section>
 

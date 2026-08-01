@@ -131,7 +131,7 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
             className="search-input"
             type="text"
             inputMode="search"
-            placeholder="例：S4"
+            placeholder="例：N101"
             value={endQuery}
             onChange={(e) => handleEndChange(e.target.value)}
           />
