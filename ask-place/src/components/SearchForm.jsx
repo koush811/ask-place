@@ -28,7 +28,7 @@ export default function SearchForm({ points, floorLabels, onSelectRoom }) {
           className="search-input"
           type="text"
           inputMode="search"
-          placeholder="例：S4"
+          placeholder="例：N101"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
