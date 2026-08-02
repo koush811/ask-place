@@ -227,7 +227,6 @@ input { font-family: inherit; }
   overflow-x: auto;
   background: #fff;
   border-bottom: 1px solid var(--paper-line);
-  position: sticky;
   top: 76px;
   z-index: 30;
 }
