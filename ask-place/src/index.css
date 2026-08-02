@@ -675,3 +675,29 @@ input { font-family: inherit; }
     font-size: 35px;
   }
 }
+
+.pdf-title{
+  text-align: center;
+  text-decoration: underline;
+  color: rgb(68, 68, 68);
+}
+
+.pdf-open-btn-mobile { display: none; }
+ 
+@media (max-width: 768px) {
+  .pdf-embed-desktop { display: none; }
+ 
+  .pdf-open-btn-mobile {
+    display: block;
+    text-align: center;
+    color: blue;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 20px ;
+  }
+ 
+  .pdf-open-btn-mobile:active {
+    transform: scale(0.98);
+  }
+}

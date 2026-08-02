@@ -12,7 +12,7 @@ import HomeImg from "../assets/imgs/image.png"
 
 const { nodes, zones, floorOrder, floorLabels } = mapData
 
-export default function Home() { 
+export default function Home() {
   const [activeFloor, setActiveFloor] = useState(floorOrder[0])
   const [highlightedId, setHighlightedId] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
@@ -90,8 +90,8 @@ export default function Home() {
     <>
 
       <div className='TitleContent'>
-          <img src={HomeImg} alt="" className='HomeImg'/>
-          <h1 className='title'>Welcome to ASK!</h1>
+        <img src={HomeImg} alt="" className='HomeImg' />
+        <h1 className='title'>Welcome to ASK!</h1>
       </div>
       <section className="hero">
         <h2 className="hero-title">ようこそ、学校説明会へ</h2>
@@ -155,9 +155,16 @@ export default function Home() {
       <StampProgress stampRooms={stampRooms} collected={collected} />
 
       <RoomInfoModal room={selectedRoom} onClose={() => setSelectedRoom(null)} />
-      <iframe src="/a.pdf" width="100%" height="600px">
-        <a href="/a.pdf">パンフレットを見る</a>
-      </iframe>
+      <h3 className='pdf-title'>パンフレット</h3>
+      <div className="pdf-embed-desktop">
+        <iframe src="/a.pdf" width="100%" height="600px" title="学校パンフレット">
+          <a href="/a.pdf">パンフレットを見る</a>
+        </iframe>
+      </div>
+
+      <a href="/a.pdf" target="_blank" rel="noopener noreferrer" className="pdf-open-btn-mobile">
+        パンフレットを見る
+      </a>
       {toast && <div className="toast">{toast}</div>}
     </>
   )
