@@ -9,6 +9,7 @@ import RoomInfoModal from '../components/RoomInfoModal.jsx'
 import StampProgress from '../components/StampProgress.jsx'
 import { getStamps } from '../utils/stamps.js'
 import HomeImg from "../assets/imgs/image.png"
+import Pdf from "../../public/pdfs/R8_学校パンフレットFull_web.pdf"
 
 const { nodes, zones, floorOrder, floorLabels } = mapData
 
@@ -155,7 +156,9 @@ export default function Home() {
       <StampProgress stampRooms={stampRooms} collected={collected} />
 
       <RoomInfoModal room={selectedRoom} onClose={() => setSelectedRoom(null)} />
-
+      <iframe src={Pdf} width="100%" height="600px">
+        <a href={Pdf}>パンフレットを見る</a>
+      </iframe>
       {toast && <div className="toast">{toast}</div>}
     </>
   )
