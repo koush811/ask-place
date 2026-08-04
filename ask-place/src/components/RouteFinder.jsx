@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { findRoute } from '../utils/routing.js'
 import { isRoomVisible } from '../utils/activities.js'
+import { matchesSearchText } from '../utils/search.js'
 
 export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
   const { nodes, floorLabels } = mapData
@@ -28,13 +29,13 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
   const startResults = useMemo(() => {
     const q = startQuery.trim()
     if (!q || startId) return []
-    return options.filter((p) => p.name.includes(q))
+    return options.filter((p) => matchesSearchText(p.name, q))
   }, [startQuery, startId, options])
 
   const endResults = useMemo(() => {
     const q = endQuery.trim()
     if (!q || endId) return []
-    return options.filter((p) => p.name.includes(q))
+    return options.filter((p) => matchesSearchText(p.name, q))
   }, [endQuery, endId, options])
 
   const showStartEmpty = startQuery.trim().length > 0 && !startId && startResults.length === 0

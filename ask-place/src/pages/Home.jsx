@@ -6,7 +6,6 @@ import SearchForm from '../components/SearchForm.jsx'
 import RouteFinder from '../components/RouteFinder.jsx'
 import MapView, { MapLegend } from '../components/MapView.jsx'
 import RoomInfoModal from '../components/RoomInfoModal.jsx'
-import StampProgress from '../components/StampProgress.jsx'
 import { getStamps } from '../utils/stamps.js'
 import HomeImg from "../assets/imgs/image.png"
 
@@ -151,8 +150,6 @@ export default function Home() {
           </div>
         )}
       </section>
-
-      <StampProgress stampRooms={stampRooms} collected={collected} />
 
       <RoomInfoModal room={selectedRoom} onClose={() => setSelectedRoom(null)} />
       
