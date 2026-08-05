@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { isRoomVisible } from '../utils/activities.js'
+import { matchesSearchText } from '../utils/search.js'
 
 export default function SearchForm({ points, floorLabels, onSelectRoom }) {
   const [query, setQuery] = useState('')
@@ -15,7 +16,7 @@ export default function SearchForm({ points, floorLabels, onSelectRoom }) {
   const results = useMemo(() => {
     const q = query.trim()
     if (!q) return []
-    return searchable.filter((p) => p.name.includes(q))
+    return searchable.filter((p) => matchesSearchText(p.name, q))
   }, [query, searchable])
 
   const showEmpty = query.trim().length > 0 && results.length === 0
