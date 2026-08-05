@@ -11,6 +11,10 @@ import HomeImg from "../assets/imgs/image.png"
 
 const { nodes, zones, floorOrder, floorLabels } = mapData
 
+function getVisibleRouteSegments(segments) {
+  return (segments || []).filter((seg) => seg.points.some((point) => point.type !== 'stairs'))
+}
+
 export default function Home() {
   const [activeFloor, setActiveFloor] = useState(floorOrder[0])
   const [highlightedId, setHighlightedId] = useState(null)
@@ -25,8 +29,10 @@ export default function Home() {
 
   const stampRooms = nodes.filter((p) => p.type === 'stamp')
 
-  // 経路検索中は、その経路が実際に通る階だけをフロア切替に表示する
-  const routeFloors = routeSegments.length > 0 ? routeSegments.map((seg) => seg.floor) : null
+  const visibleRouteSegments = getVisibleRouteSegments(routeSegments)
+
+  // 経路検索中は、階段だけがある階を除いて、その経路が実際に通る階だけをフロア切替に表示する
+  const routeFloors = visibleRouteSegments.length > 0 ? visibleRouteSegments.map((seg) => seg.floor) : null
 
   // Handle arrival from a QR code scan (/stamp/:roomNumber redirected here)
   useEffect(() => {
@@ -60,7 +66,12 @@ export default function Home() {
   const handleRouteComputed = (segments) => {
     setRouteSegments(segments)
     setSegmentIndex(0)
-    if (segments.length > 0) setActiveFloor(segments[0].floor)
+    const visibleSegments = getVisibleRouteSegments(segments)
+    if (visibleSegments.length > 0) {
+      setActiveFloor(visibleSegments[0].floor)
+    } else if (segments.length > 0) {
+      setActiveFloor(segments[0].floor)
+    }
   }
 
   const handleClearRoute = () => {
@@ -69,21 +80,21 @@ export default function Home() {
   }
 
   const goToSegment = (index) => {
-    if (index < 0 || index >= routeSegments.length) return
+    if (index < 0 || index >= visibleRouteSegments.length) return
     setSegmentIndex(index)
-    setActiveFloor(routeSegments[index].floor)
+    setActiveFloor(visibleRouteSegments[index].floor)
   }
 
   const handleFloorChange = (floorKey) => {
     setActiveFloor(floorKey)
-    if (routeSegments.length > 0) {
-      const idx = routeSegments.findIndex((seg) => seg.floor === floorKey)
+    if (visibleRouteSegments.length > 0) {
+      const idx = visibleRouteSegments.findIndex((seg) => seg.floor === floorKey)
       if (idx !== -1) setSegmentIndex(idx)
     }
   }
 
   const routePointsForActiveFloor =
-    routeSegments.find((seg) => seg.floor === activeFloor)?.points ?? null
+    visibleRouteSegments.find((seg) => seg.floor === activeFloor)?.points ?? null
 
   return (
     <>
@@ -127,7 +138,7 @@ export default function Home() {
         <MapLegend />
         <div className="zoom-hint">ピンチ / ホイールで拡大・縮小できます</div>
 
-        {routeSegments.length > 1 && (
+        {visibleRouteSegments.length > 1 && (
           <div className="route-floor-nav">
             <button
               type="button"
@@ -137,13 +148,13 @@ export default function Home() {
               ← 前の階
             </button>
             <span className="step-label">
-              {floorLabels[routeSegments[segmentIndex].floor]}
-              {' '}({segmentIndex + 1}/{routeSegments.length})
+              {floorLabels[visibleRouteSegments[segmentIndex].floor]}
+              {' '}({segmentIndex + 1}/{visibleRouteSegments.length})
             </span>
             <button
               type="button"
               onClick={() => goToSegment(segmentIndex + 1)}
-              disabled={segmentIndex === routeSegments.length - 1}
+              disabled={segmentIndex === visibleRouteSegments.length - 1}
             >
               次の階 →
             </button>

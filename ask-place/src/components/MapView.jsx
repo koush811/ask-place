@@ -156,7 +156,6 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
 
 export function MapLegend() {
   const otherLabels = {
-    stamp: 'スタンプ対象',
     entrance: '入口',
     stairs: '階段 / EV',
   }

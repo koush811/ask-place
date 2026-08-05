@@ -24,6 +24,14 @@ const DEFAULT_FLOOR_ORDER = ['floor_1F', 'floor_2F', 'floor_3F', 'floor_4F', 'fl
 const HUB_TYPES = ['branch', 'stairs', 'entrance']
 const LEAF_TYPES = ['room', 'stamp']
 
+function isStairNode(node) {
+  return node?.type === 'stairs'
+}
+
+function isCorridorNode(node) {
+  return !!node && !isStairNode(node)
+}
+
 function dist(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y)
 }
@@ -323,7 +331,7 @@ function routeToFloorSegments(nodes, path) {
     const n = nodes.find((nn) => nn.id === nodeId)
     if (!n) return
     const last = segments[segments.length - 1]
-    const point = { x: n.x, y: n.y, nodeId: n.id, name: n.name }
+    const point = { x: n.x, y: n.y, nodeId: n.id, name: n.name, type: n.type }
     if (last && last.floor === n.floor) {
       last.points.push(point)
     } else {

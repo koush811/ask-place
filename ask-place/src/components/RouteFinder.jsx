@@ -19,7 +19,7 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
           (p) =>
             p.type === 'stamp' ||
             p.type === 'entrance' ||
-            (p.type === 'room' && isRoomVisible(p.name)),
+            p.type === 'room',
         )
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name, 'ja')),
