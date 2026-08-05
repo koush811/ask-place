@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import { getActivityForRoom, isRoomVisible, activityData } from '../utils/activities.js'
+import { matchesSearchText } from "../utils/search";
 
 import f1 from '../map/F1.png'
 import f2 from '../map/F2.png'
@@ -16,7 +17,7 @@ const FLOOR_IMAGES = {
   floor_5F: f5,
 }
 
-export default function MapView({ points, zones = [], activeFloor, highlightedId, onSelectRoom, routePoints }) {
+export default function MapView({ points, zones = [], activeFloor, highlightedId, onSelectRoom, routePoints, forcedRoom,onClearForcedRoom,  }) {
   const containerRef = useRef(null)
   const [naturalSize, setNaturalSize] = useState(null)
   const [fitScale, setFitScale] = useState(1)
@@ -39,8 +40,12 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
     (p) =>
       p.floor === activeFloor &&
       p.type !== 'branch' &&
-      (p.type !== 'room' || isRoomVisible(p.name)),
-  )
+      (
+        p.type !== 'room' ||
+        isRoomVisible(p.name) ||
+        p.name === forcedRoom
+      ),
+  );
   const floorZones = zones.filter((z) => z.floor === activeFloor)
 
   const frameStyle = naturalSize
@@ -91,7 +96,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                             className="zone-label"
                             textAnchor="middle"
                           >
-                            {z.label}
+                            立入禁止
                           </text>
                         )}
                       </g>
@@ -127,7 +132,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                   </svg>
                 )}
                 {floorPoints.map((p) => {
-                  const clickable = p.type === 'room' || p.type === 'stamp'
+                  const clickable = p.type === 'room' || p.type === 'entrance'
                   const activity = p.type === 'room' ? getActivityForRoom(p.name) : null
                   const pinStyle = {
                     left: p.x,
@@ -139,7 +144,14 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                       key={p.id}
                       className={`map-pin type-${p.type}${highlightedId === p.id ? ' highlighted' : ''}`}
                       style={pinStyle}
-                      onClick={clickable ? () => onSelectRoom(p) : undefined}
+                      onClick={
+                        clickable
+                          ? () => {
+                            onClearForcedRoom?.();
+                            onSelectRoom(p);
+                          }
+                          : undefined
+                      }
                       role={clickable ? 'button' : undefined}
                       aria-label={clickable ? p.name : undefined}
                     />

@@ -23,6 +23,8 @@ export default function Home() {
   const [toast, setToast] = useState(null)
   const [routeSegments, setRouteSegments] = useState([])
   const [segmentIndex, setSegmentIndex] = useState(0)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [forcedRoom, setForcedRoom] = useState(null);
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -110,7 +112,7 @@ export default function Home() {
         </p>
       </section>
 
-      <SearchForm points={nodes} floorLabels={floorLabels} onSelectRoom={handleSelectRoom} />
+      <SearchForm points={nodes} floorLabels={floorLabels} onSelectRoom={handleSelectRoom} onForceRoom={setForcedRoom}/>
 
       <RouteFinder
         mapData={mapData}
@@ -134,6 +136,8 @@ export default function Home() {
           highlightedId={highlightedId}
           onSelectRoom={handleSelectRoom}
           routePoints={routePointsForActiveFloor}
+          forcedRoom={forcedRoom}
+          onClearForcedRoom={() => setForcedRoom(null)}
         />
         <MapLegend />
         <div className="zoom-hint">ピンチ / ホイールで拡大・縮小できます</div>
