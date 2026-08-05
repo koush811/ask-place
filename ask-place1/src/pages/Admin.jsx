@@ -80,10 +80,10 @@ export default function Admin() {
     setMessage(null)
   }
 
-  const handleDeleteImage = async (imageIndex) => {
-    if (!selectedActivity) return
+  const handleDeleteImage = async (targetImage) => {
+    if (!selectedActivity || !targetImage) return
 
-    setDeletingImageIndex(imageIndex)
+    setDeletingImageIndex(targetImage.url)
     setMessage(null)
 
     try {
@@ -92,14 +92,20 @@ export default function Admin() {
       if (!docSnap.exists()) return
 
       const existingImages = docSnap.data().images ?? []
-      const targetImage = existingImages[imageIndex]
-      const nextImages = existingImages.filter((_, idx) => idx !== imageIndex)
+      const nextImages = existingImages.filter((img) => img.url !== targetImage.url)
 
       if (targetImage?.path) {
-        await deleteObject(ref(storage, targetImage.path))
+        try {
+          await deleteObject(ref(storage, targetImage.path))
+        } catch (storageError) {
+          if (storageError?.code !== 'storage/object-not-found') {
+            throw storageError
+          }
+        }
       }
 
       await updateDoc(docRef, { images: nextImages })
+      await refreshActivitiesFromFirestore()
       setMessage({ type: 'success', text: '画像を削除しました' })
     } catch (err) {
       // eslint-disable-next-line no-console
@@ -273,10 +279,10 @@ export default function Admin() {
                       <button
                         type="button"
                         className="admin-btn"
-                        onClick={() => handleDeleteImage(i)}
-                        disabled={deletingImageIndex === i}
+                        onClick={() => handleDeleteImage(img)}
+                        disabled={deletingImageIndex === img.url}
                       >
-                        {deletingImageIndex === i ? '削除中…' : '削除'}
+                        {deletingImageIndex === img.url ? '削除中…' : '削除'}
                       </button>
                     </div>
                   ))}
