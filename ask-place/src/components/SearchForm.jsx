@@ -2,13 +2,13 @@ import { useMemo, useState } from 'react'
 import { isRoomVisible } from '../utils/activities.js'
 import { matchesSearchText } from '../utils/search.js'
 
-export default function SearchForm({ points, floorLabels, onSelectRoom }) {
+export default function SearchForm({ points, floorLabels, onSelectRoom, onForceRoom, }) {
   const [query, setQuery] = useState('')
 
   const searchable = useMemo(
     () =>
       points.filter(
-        (p) => p.type === 'stamp' || (p.type === 'room' && isRoomVisible(p.name)),
+        (p) => p.type === 'room'
       ),
     [points],
   )
@@ -31,7 +31,9 @@ export default function SearchForm({ points, floorLabels, onSelectRoom }) {
           inputMode="search"
           placeholder="例：N101"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value)
+          }}
         />
       </div>
 
@@ -43,8 +45,9 @@ export default function SearchForm({ points, floorLabels, onSelectRoom }) {
               type="button"
               className="search-result-item"
               onClick={() => {
-                onSelectRoom(r)
-                setQuery('')
+                onSelectRoom(r);
+                onForceRoom?.(r.name);
+                setQuery("");
               }}
             >
               <span>{r.name}</span>

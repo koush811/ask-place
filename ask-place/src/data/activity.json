@@ -1,12 +1,5 @@
 [
   {
-    "id": "reception_junior_high",
-    "name": "受付(附属中学校)",
-    "color": "#2ecc71",
-    "description": "附属中学校の受付です。まずはこちらにお越しください。",
-    "rooms": ["N550", "N405"]
-  },
-  {
     "id": "construction",
     "name": "建設科",
     "color": "#e8752c",
@@ -38,14 +31,12 @@
     "id": "principal_briefing",
     "name": "校長説明会",
     "color": "#f4c430",
-    "description": "校長による学校説明会を行います。",
     "rooms": ["E202"]
   },
   {
     "id": "alumni_career",
     "name": "卒業生キャリアワーク",
     "color": "#16a085",
-    "description": "卒業生によるキャリアに関するワークショップです。",
     "rooms": ["E207"]
   },
   {
@@ -62,7 +53,7 @@
     "description": "理工科の展示・体験コーナーです。",
     "rooms": [
       "S402", "S403", "S404", "S405", "S406", "S407",
-      "S408", "S409", "S410", "S411", "S412", "S417", "S418"
+      "S408", "S409", "S410", "S411", "S412", "E417", "E418"
     ]
   }
 ]

@@ -299,9 +299,8 @@ input { font-family: inherit; }
 }
 
 .map-pin.type-room { background: var(--room); width: 18px; height: 18px; }
-.map-pin.type-stamp { background: var(--stamp); width: 14px; height: 14px; }
 .map-pin.type-branch { background: var(--branch); width: 9px; height: 9px; cursor: default; }
-.map-pin.type-entrance { background: var(--entrance); width: 12px; height: 12px; cursor: default; }
+.map-pin.type-entrance { background: var(--entrance); width: 12px; height: 12px;  }
 .map-pin.type-stairs { background: var(--stairs); width: 12px; height: 12px; cursor: default; }
 
 .map-pin.highlighted {
