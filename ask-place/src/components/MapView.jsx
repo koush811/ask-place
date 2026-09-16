@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
-import { getActivityForRoom, isRoomVisible, activityData } from '../utils/activities.js'
-import { matchesSearchText } from "../utils/search";
 
 import f1 from '../map/F1.png'
 import f2 from '../map/F2.png'
@@ -39,12 +37,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
   const floorPoints = points.filter(
     (p) =>
       p.floor === activeFloor &&
-      p.type !== 'branch' &&
-      (
-        p.type !== 'room' ||
-        isRoomVisible(p.name) ||
-        p.name === forcedRoom
-      ),
+      p.type !== 'branch',
   );
   const floorZones = zones.filter((z) => z.floor === activeFloor)
 
@@ -133,11 +126,9 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                 )}
                 {floorPoints.map((p) => {
                   const clickable = p.type === 'room' || p.type === 'entrance'
-                  const activity = p.type === 'room' ? getActivityForRoom(p.name) : null
                   const pinStyle = {
                     left: p.x,
                     top: p.y,
-                    ...(activity ? { background: activity.color } : {}),
                   }
                   return (
                     <div
@@ -173,12 +164,6 @@ export function MapLegend() {
   }
   return (
     <div className="map-legend">
-      {activityData.map((act) => (
-        <span key={act.id}>
-          <i style={{ background: act.color, width: 9, height: 9, borderRadius: '50%', display: 'inline-block' }} />
-          {act.name}
-        </span>
-      ))}
       {Object.entries(otherLabels).map(([t, label]) => (
         <span key={t}>
           <i className={`map-pin type-${t}`} style={{ position: 'static', transform: 'none' }} />

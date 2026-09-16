@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { isRoomVisible } from '../utils/activities.js'
 import { matchesSearchText } from '../utils/search.js'
 
 export default function SearchForm({ points, floorLabels, onSelectRoom, onForceRoom, }) {

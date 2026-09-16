@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { findRoute } from '../utils/routing.js'
-import { isRoomVisible } from '../utils/activities.js'
 import { matchesSearchText } from '../utils/search.js'
 
 export default function RouteFinder({ mapData, onRouteComputed, onClear }) {

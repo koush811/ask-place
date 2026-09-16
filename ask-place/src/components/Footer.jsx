@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="site-footer">
-      学校説明会案内サイト — 会場内でのご利用に限ります
+      <p>愛知総合工科高校 文化祭展示案内サイト</p>
     </footer>
-  )
+  );
 }
