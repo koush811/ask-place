@@ -10,6 +10,7 @@ import { db } from "../../lib/firebase";
 import { uploadRoomImage, deleteRoomImage } from "../../lib/imageUpload";
 import { ROOM_STATUS_LABEL } from "../../lib/roomStatus";
 import StatusBadge from "../../components/StatusBadge";
+import { useSiteSettings } from "../../context/SiteSettingsContext";
 
 /**
  * スーパー管理者画面 (/admin - super_admin ログイン後) - 仕様書 第8.3章
@@ -19,6 +20,8 @@ import StatusBadge from "../../components/StatusBadge";
  * }} props
  */
 export default function SuperAdminPage({ user, onLogout }) {
+  const { isPublished, toggleSitePublish } = useSiteSettings();
+  const [sitePublishLoading, setSitePublishLoading] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -75,6 +78,37 @@ export default function SuperAdminPage({ user, onLogout }) {
     setSelectedFile(null);
     setPreviewUrl(null);
     setStatusMsg({ text: "", isError: false });
+  };
+
+  // サイト全体の公開・非公開トグル切り替え（スーパー管理者のみ）
+  const handleToggleSitePublish = async () => {
+    const nextState = !isPublished;
+    const confirmText = nextState
+      ? "サイトを【公開】しますか？\n一般来場者が校内マップや展示情報を閲覧できるようになります。"
+      : "サイトを【非公開】にしますか？\n一般来場者の画面には「現在は準備中です」と表示され、管理者ログイン以外の機能は使用できなくなります。";
+
+    if (!window.confirm(confirmText)) return;
+
+    setSitePublishLoading(true);
+    setStatusMsg({ text: "", isError: false });
+
+    try {
+      await toggleSitePublish(nextState, user?.uid);
+      setStatusMsg({
+        text: nextState
+          ? "🎉 サイトを全体公開に設定しました。"
+          : "🔒 サイトを非公開（準備中モード）に設定しました。一般画面には「現在は準備中です」と表示されます。",
+        isError: false,
+      });
+    } catch (err) {
+      console.error("[SuperAdmin] サイト公開設定変更失敗:", err);
+      setStatusMsg({
+        text: "サイト公開設定の更新に失敗しました: " + (err.message || "権限がありません"),
+        isError: true,
+      });
+    } finally {
+      setSitePublishLoading(false);
+    }
   };
 
   // enabled (公開/非公開) のワンクリックトグル切り替え
@@ -223,6 +257,78 @@ export default function SuperAdminPage({ user, onLogout }) {
           </button>
         </div>
       </header>
+
+      {/* サイト公開設定パネル（全体管理者のみ） */}
+      <section className="site-publish-panel">
+        <div className="site-publish-panel-content">
+          <div className="site-publish-badge-group">
+            <span className="site-publish-title">サイト全体の公開設定</span>
+            <span
+              className={`site-publish-status-badge ${
+                isPublished ? "is-published" : "is-unpublished"
+              }`}
+            >
+              <span className="status-dot"></span>
+              {isPublished ? "公開中" : "非公開 (準備中)"}
+            </span>
+          </div>
+          <p className="site-publish-description">
+            {isPublished
+              ? "サイトは現在「公開中」です。一般来場者は校内マップや各展示情報を閲覧できます。"
+              : "サイトは現在「非公開（準備中）」です。一般来場者にはページ中央に「現在は準備中です」と表示され、管理者ログイン以外の全機能が停止しています。"}
+          </p>
+        </div>
+        <div className="site-publish-panel-action">
+          <button
+            type="button"
+            className={`site-publish-action-btn ${
+              isPublished ? "btn-make-unpublished" : "btn-make-published"
+            }`}
+            onClick={handleToggleSitePublish}
+            disabled={sitePublishLoading}
+          >
+            {sitePublishLoading ? (
+              "設定更新中..."
+            ) : isPublished ? (
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                サイトを非公開にする
+              </>
+            ) : (
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                サイトを公開する
+              </>
+            )}
+          </button>
+        </div>
+      </section>
 
       {statusMsg.text && (
         <div

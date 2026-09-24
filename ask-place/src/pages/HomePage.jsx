@@ -7,6 +7,7 @@ import RouteFinder from "../components/RouteFinder.jsx";
 import MapView, { MapLegend } from "../components/MapView.jsx";
 import RoomInfoModal from "../components/RoomInfoModal.jsx";
 import { useRooms } from "../context/RoomsContext";
+import { useSiteSettings } from "../context/SiteSettingsContext";
 import ImageSlider from "../components/imageSlide.jsx";
 
 const { nodes, zones, floorOrder, floorLabels } = mapData;
@@ -21,6 +22,7 @@ function getVisibleRouteSegments(segments) {
  * トップページ (/) - 仕様書 第5章
  */
 export default function HomePage() {
+  const { isPublished } = useSiteSettings();
   const { rooms } = useRooms();
   const [searchParams] = useSearchParams();
   const location = useLocation();
@@ -181,6 +183,41 @@ export default function HomePage() {
 
   const routePointsForActiveFloor =
     visibleRouteSegments.find((seg) => seg.floor === activeFloor)?.points ?? null;
+
+  // サイト非公開（準備中）時の表示
+  if (!isPublished) {
+    return (
+      <main className="maintenance-page">
+        <div className="maintenance-card">
+          <div className="maintenance-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              width="56"
+              height="56"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <h1 className="maintenance-title">現在は準備中です</h1>
+          <p className="maintenance-desc">
+            ただいま文化祭サイトの公開準備を行っております。<br />
+            公開まで今しばらくお待ちください。
+          </p>
+          <div className="maintenance-actions">
+            <Link to="/admin" className="maintenance-admin-btn">
+              管理者ログイン
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="home-page">

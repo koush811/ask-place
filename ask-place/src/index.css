@@ -1950,3 +1950,217 @@ input, select, textarea { font-family: inherit; }
 .imgSlideItem.isActive {
   opacity: 1; 
 }
+
+/* ---------- サイト準備中・非公開画面 (Maintenance) ---------- */
+.maintenance-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 160px);
+  padding: 40px 16px;
+  background: #f8fafc;
+}
+
+.maintenance-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 48px 32px;
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+}
+
+.maintenance-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #fef3c7;
+  color: #d97706;
+  margin: 0 auto 24px;
+}
+
+.maintenance-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+}
+
+.maintenance-desc {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #64748b;
+  margin: 0 0 32px;
+}
+
+.maintenance-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.maintenance-admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  background-color: #0f172a;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.maintenance-admin-btn:hover {
+  background-color: #334155;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.15);
+}
+
+.header-actions-maintenance {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* ---------- スーパー管理者: サイト公開設定パネル ---------- */
+.site-publish-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.site-publish-panel-content {
+  flex: 1;
+}
+
+.site-publish-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.site-publish-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.site-publish-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.site-publish-status-badge .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.site-publish-status-badge.is-published {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.site-publish-status-badge.is-published .status-dot {
+  background-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.site-publish-status-badge.is-unpublished {
+  background-color: #fff1f2;
+  color: #9f1239;
+  border: 1px solid #fecdd3;
+}
+
+.site-publish-status-badge.is-unpublished .status-dot {
+  background-color: #e11d48;
+  box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
+}
+
+.site-publish-description {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.site-publish-panel-action {
+  flex-shrink: 0;
+}
+
+.site-publish-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.site-publish-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.site-publish-action-btn.btn-make-unpublished {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
+.site-publish-action-btn.btn-make-unpublished:hover:not(:disabled) {
+  background-color: #fecaca;
+  color: #7f1d1d;
+}
+
+.site-publish-action-btn.btn-make-published {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.site-publish-action-btn.btn-make-published:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+@media (max-width: 640px) {
+  .site-publish-panel {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-publish-panel-action {
+    width: 100%;
+  }
+
+  .site-publish-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -7,19 +7,22 @@ import HomePage from "./pages/HomePage.jsx";
 import RoomsListPage from "./pages/RoomsListPage.jsx";
 import RoomDetailPage from "./pages/RoomDetailPage.jsx";
 import AdminRouter from "./pages/admin/AdminRouter.jsx";
+import { SiteSettingsProvider } from "./context/SiteSettingsContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route element={<App />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/rooms" element={<RoomsListPage />} />
-          <Route path="/room/:id" element={<RoomDetailPage />} />
-          <Route path="/admin/*" element={<AdminRouter />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
+      <SiteSettingsProvider>
+        <Routes>
+          <Route element={<App />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/rooms" element={<RoomsListPage />} />
+            <Route path="/room/:id" element={<RoomDetailPage />} />
+            <Route path="/admin/*" element={<AdminRouter />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </SiteSettingsProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
