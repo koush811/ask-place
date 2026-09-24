@@ -128,7 +128,11 @@ export default function RoomDetailPage() {
         <Link to="/rooms" className="btn-secondary">
           展示一覧を見る
         </Link>
-        <Link to="/" className="btn-primary">
+        <Link
+          to={`/?room=${encodeURIComponent(room.id)}`}
+          state={{ targetRoomId: room.id }}
+          className="btn-primary"
+        >
           校内マップで場所を確認
         </Link>
       </div>

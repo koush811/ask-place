@@ -130,10 +130,13 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                     left: p.x,
                     top: p.y,
                   }
+                  const isHighlighted = Array.isArray(highlightedId)
+                    ? highlightedId.includes(p.id) || highlightedId.includes(p.name)
+                    : highlightedId === p.id || highlightedId === p.name
                   return (
                     <div
                       key={p.id}
-                      className={`map-pin type-${p.type}${highlightedId === p.id ? ' highlighted' : ''}`}
+                      className={`map-pin type-${p.type}${isHighlighted ? ' highlighted' : ''}`}
                       style={pinStyle}
                       onClick={
                         clickable

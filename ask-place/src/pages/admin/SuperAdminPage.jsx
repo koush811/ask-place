@@ -215,7 +215,8 @@ export default function SuperAdminPage({ user, onLogout }) {
         </div>
         <div className="header-actions">
           <button type="button" className="btn-secondary" onClick={fetchAllRooms}>
-            🔄 一覧を再取得
+            
+            一覧を再取得
           </button>
           <button type="button" className="admin-logout-btn" onClick={onLogout}>
             ログアウト

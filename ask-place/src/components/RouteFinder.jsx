@@ -76,7 +76,7 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
       onClear()
       return
     }
-    onRouteComputed(result.segments)
+    onRouteComputed(result.segments, { startId, endId })
   }
 
   const handleClear = () => {

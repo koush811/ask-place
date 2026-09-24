@@ -41,7 +41,6 @@ src/
 │       ├── ClassAdminPage.jsx    # /admin (class_admin ログイン後)
 │       └── SuperAdminPage.jsx    # /admin (super_admin ログイン後)
 ├── components/
-│   ├── Slideshow.jsx
 │   ├── SchoolMap.jsx             # 実装済みのものを移設
 │   ├── RoomCard.jsx
 │   ├── RoomList.jsx
@@ -223,47 +222,13 @@ export function useRooms() {
 
 # 5. `/`(トップページ)の実装仕様
 
-## 5.1 スライドショー選定ロジック
-
-```javascript
-/**
- * @param {import("../types/room").Room[]} rooms
- * @returns {import("../types/room").Room[]}
- */
-function selectSlideshowRooms(rooms) {
-  const emptyRooms = rooms.filter((r) => r.status === "empty");
-  if (emptyRooms.length === 0) return []; // 何も表示しない
-  if (emptyRooms.length <= 5) return emptyRooms;
-  return shuffle(emptyRooms).slice(0, 5); // ランダムに5件抽出
-}
-
-function shuffle(array) {
-  const result = [...array];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
-```
-
-* `emptyRooms.length === 0` の場合、スライドショー領域自体を非表示にする(親コンポーネント側で `slides.length === 0` を判定してレンダリングしない)
-
-## 5.2 スライドショーの自動再生・手動操作
-
-* 5秒ごとに次のスライドへ自動遷移(`setInterval` または `useEffect` + タイマー)
-* 「前へ」「次へ」ボタンで手動切り替え可能にする
-* 手動操作時は自動切り替えのタイマーをリセットする(操作直後にまた5秒後に自動送りされる)
-* 表示形式:部屋名 / 展示タイトル / 現在の状況(第2.1章の表示例に準拠)
-* スライドをクリック/タップすると `/room/:id` に遷移する
-
-## 5.3 学校マップ
+## 5.1 学校マップ
 
 既存実装のコンポーネントをそのまま流用する。データソースは `data/mapData.json`(フロントエンドJSON、Firebaseに保存しない)。マップ上の部屋クリックで `/room/:id` に遷移する処理のみ、共有ステート(`useRooms`)と接続されていることを確認する(画像は読み込まない)。
 
-## 5.4 「展示一覧を見る」リンク
+## 5.2 「展示一覧を見る」リンク
 
-スライドショー付近に `/rooms` へのリンクボタンを設置する。
+トップページ内に `/rooms` へのリンクボタンを設置する。
 
 ---
 

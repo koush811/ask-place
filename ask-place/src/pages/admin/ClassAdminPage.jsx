@@ -182,7 +182,7 @@ export default function ClassAdminPage({ user, onLogout }) {
             <option value="crowded">🔴 {ROOM_STATUS_LABEL.crowded} (現在混み合っています)</option>
           </select>
           <span className="input-hint">
-            ※「空」に設定すると、トップページのスライドショーに優先表示され混雑緩和につながります
+            ※混雑状況をこまめに更新することで、来場者の混雑緩和につながります
           </span>
         </div>
 
