@@ -9,7 +9,7 @@ const SiteSettingsContext = createContext(undefined);
  * Firestoreの settings/site をリアルタイムで監視する
  */
 export function SiteSettingsProvider({ children }) {
-  const [isPublished, setIsPublished] = useState(true);
+  const [isPublished, setIsPublished] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -31,8 +31,8 @@ export function SiteSettingsProvider({ children }) {
       (err) => {
         console.error("[SiteSettings] サイト設定取得エラー:", err);
         setError(err);
-        // エラー時でもサイトが一切閲覧できなくなるのを防ぐため、デフォルトで公開とする
-        setIsPublished(true);
+        // 設定を確認できないときは公開しない。公開状態の誤判定を防ぐ。
+        setIsPublished(false);
         setLoading(false);
       }
     );

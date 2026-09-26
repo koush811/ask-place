@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useRooms } from "../context/RoomsContext";
 import StatusBadge from "../components/StatusBadge";
+import { isTrustedStorageUrl } from "../lib/firebase";
 
 /**
  * 最終更新日時を読みやすい形式にフォーマット
@@ -89,7 +90,7 @@ export default function RoomDetailPage() {
 
         {/* 写真表示エリア (仕様書 第7.2章) */}
         <section className="detail-image-section">
-          {room.imageUrl && !imgError ? (
+          {isTrustedStorageUrl(room.imageUrl) && !imgError ? (
             <div className="detail-image-wrapper">
               {!imgLoaded && <div className="image-skeleton">画像を読み込み中...</div>}
               <img

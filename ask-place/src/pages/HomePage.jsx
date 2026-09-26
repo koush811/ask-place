@@ -33,6 +33,7 @@ export default function HomePage() {
   const [segmentIndex, setSegmentIndex] = useState(0);
   const [forcedRoom, setForcedRoom] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [routeEndpointIds, setRouteEndpointIds] = useState(new Set());
 
   // 部屋検索・経路検索・詳細画面遷移などから指定されたノードID/名前のSet（非公開でも表示・強調する用）
   const [extraVisibleNodeIds, setExtraVisibleNodeIds] = useState(new Set());
@@ -60,12 +61,17 @@ export default function HomePage() {
   const visiblePoints = useMemo(() => {
     return nodes.filter((p) => {
       if (p.type !== "room") return true;
-      if (extraVisibleNodeIds.has(p.id) || extraVisibleNodeIds.has(p.name)) {
+      if (
+        extraVisibleNodeIds.has(p.id) ||
+        extraVisibleNodeIds.has(p.name) ||
+        routeEndpointIds.has(p.id) ||
+        routeEndpointIds.has(p.name)
+      ) {
         return true;
       }
       return publishedRoomIds.has(p.name) || publishedRoomIds.has(p.id);
     });
-  }, [publishedRoomIds, extraVisibleNodeIds]);
+  }, [publishedRoomIds, extraVisibleNodeIds, routeEndpointIds]);
 
   // 詳細画面（校内マップで場所を確認ボタン）からの遷移処理
   const targetRoomParam = searchParams.get("room") || location.state?.targetRoomId;
@@ -134,28 +140,21 @@ export default function HomePage() {
       setActiveFloor(segments[0].floor);
     }
 
-    const newIds = [];
+    const endpointIds = [];
     const highlightIds = [];
 
     if (meta?.startId) {
-      newIds.push(meta.startId);
+      endpointIds.push(meta.startId);
       highlightIds.push(meta.startId);
     }
     if (meta?.endId) {
-      newIds.push(meta.endId);
+      endpointIds.push(meta.endId);
       highlightIds.push(meta.endId);
     }
 
-    // 経路上の全ノードも表示対象に追加
-    (segments || []).forEach((seg) => {
-      (seg.points || []).forEach((pt) => {
-        if (pt.nodeId) newIds.push(pt.nodeId);
-      });
-    });
-
-    if (newIds.length > 0) {
-      setExtraVisibleNodeIds((prev) => new Set([...prev, ...newIds]));
-    }
+    // 非公開の出発地・目的地だけを一時表示し、中間ノードは経路線で示す。
+    setExtraVisibleNodeIds(new Set());
+    setRouteEndpointIds(new Set(endpointIds));
     if (highlightIds.length > 0) {
       setHighlightedId(highlightIds);
     }
@@ -165,6 +164,7 @@ export default function HomePage() {
     setRouteSegments([]);
     setSegmentIndex(0);
     setHighlightedId(null);
+    setRouteEndpointIds(new Set());
   };
 
   const goToSegment = (index) => {

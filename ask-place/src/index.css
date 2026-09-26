@@ -63,7 +63,7 @@ input, select, textarea { font-family: inherit; }
   padding: 14px 18px;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 102;
   display: flex;
   justify-content: space-between;
   align-items: center;

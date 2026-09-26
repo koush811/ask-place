@@ -4,23 +4,48 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "mock-api-key",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "mock-project.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "mock-project",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "mock-project.firebasestorage.app",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "000000000000",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:000000000000:web:000000000000",
-};
+const configKeys = [
+  "VITE_FIREBASE_API_KEY",
+  "VITE_FIREBASE_AUTH_DOMAIN",
+  "VITE_FIREBASE_PROJECT_ID",
+  "VITE_FIREBASE_STORAGE_BUCKET",
+  "VITE_FIREBASE_MESSAGING_SENDER_ID",
+  "VITE_FIREBASE_APP_ID",
+];
 
-if (!import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY === "your_api_key_here") {
-  console.warn("[Firebase] 有効なFirebase設定がありません。.env ファイルにFirebaseコンソールの設定値を入力し、サーバーを再起動してください。");
+const missingConfigKeys = configKeys.filter((key) => !import.meta.env[key]);
+if (missingConfigKeys.length > 0) {
+  throw new Error(`Firebase設定が不足しています: ${missingConfigKeys.join(", ")}`);
 }
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+export function isTrustedStorageUrl(value) {
+  if (typeof value !== "string") return false;
+
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === "https:" &&
+      (url.hostname === "firebasestorage.googleapis.com" ||
+        url.hostname.endsWith(".firebasestorage.app"))
+    );
+  } catch {
+    return false;
+  }
+}
 
 // App Check (reCAPTCHA v3等のキーが設定されている場合のみ初期化)
 if (typeof window !== "undefined" && import.meta.env.VITE_APPCHECK_SITE_KEY) {

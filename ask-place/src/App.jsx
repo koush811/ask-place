@@ -39,10 +39,23 @@ function MaintenancePage() {
 export default function App() {
   const { isPublished, loading } = useSiteSettings();
   const location = useLocation();
+  const isAdminPath = location.pathname.startsWith("/admin");
+
+  if (loading && !isAdminPath) {
+    return (
+      <div className="app-shell">
+        <main className="maintenance-page" aria-busy="true">
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>サイト設定を確認中...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   // サイト非公開時は /admin 以外のすべてのページを / にリダイレクト
   if (!loading && !isPublished) {
-    const isAdminPath = location.pathname.startsWith("/admin");
     if (!isAdminPath && location.pathname !== "/") {
       return <Navigate to="/" replace />;
     }
