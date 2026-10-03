@@ -30,9 +30,6 @@ export default function RoomInfoModal({ room, onClose }) {
           </div>
         </div>
         
-        {room.type === 'stamp' && (
-          <div className="stamp-note">この教室はスタンプラリー対象です。設置されたQRコードを読み取るとスタンプを獲得できます。</div>
-        )}
         {room.type === 'room' && (
           <Link className="detail-link" to={`/room/${room.name || room.id}`}>
             詳細を見る

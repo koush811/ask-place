@@ -193,6 +193,7 @@ export default function ClassAdminPage({ user, onLogout }) {
             id="room-desc"
             className="admin-textarea"
             rows={5}
+            maxLength={1000}
             placeholder="来場者に向けた企画の紹介や見どころを入力してください"
             value={description}
             onChange={(e) => setDescription(e.target.value)}

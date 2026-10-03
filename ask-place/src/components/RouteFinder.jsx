@@ -16,7 +16,6 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
       nodes
         .filter(
           (p) =>
-            p.type === 'stamp' ||
             p.type === 'entrance' ||
             p.type === 'room',
         )

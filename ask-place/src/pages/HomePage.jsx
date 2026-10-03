@@ -120,7 +120,7 @@ export default function HomePage() {
       setActiveFloor(point.floor);
     }
     // 2. roomノードを表示対象に追加
-    setExtraVisibleNodeIds((prev) => new Set([...prev, point.id, point.name]));
+    setExtraVisibleNodeIds(new Set([point.id, point.name]));
     // 3. 赤い丸で強調表示
     setHighlightedId(point.id);
     // 4. 部屋モーダルを表示
@@ -131,6 +131,8 @@ export default function HomePage() {
 
   // 経路検索実行時
   const handleRouteComputed = (segments, meta) => {
+    setSelectedRoom(null);
+    setForcedRoom(null);
     setRouteSegments(segments);
     setSegmentIndex(0);
     const visibleSegments = getVisibleRouteSegments(segments);
@@ -164,6 +166,9 @@ export default function HomePage() {
     setRouteSegments([]);
     setSegmentIndex(0);
     setHighlightedId(null);
+    setSelectedRoom(null);
+    setForcedRoom(null);
+    setExtraVisibleNodeIds(new Set());
     setRouteEndpointIds(new Set());
   };
 

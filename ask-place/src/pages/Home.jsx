@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import mapData from '../data/campus_map_data.json'
 import FloorSelector from '../components/FloorSelector.jsx'
 import SearchForm from '../components/SearchForm.jsx'
 import RouteFinder from '../components/RouteFinder.jsx'
 import MapView, { MapLegend } from '../components/MapView.jsx'
 import RoomInfoModal from '../components/RoomInfoModal.jsx'
-import { getStamps } from '../utils/stamps.js'
 import HomeImg from "../assets/imgs/image.png"
 
 const { nodes, zones, floorOrder, floorLabels } = mapData
@@ -19,42 +17,15 @@ export default function Home() {
   const [activeFloor, setActiveFloor] = useState(floorOrder[0])
   const [highlightedId, setHighlightedId] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
-  const [collected, setCollected] = useState(getStamps())
-  const [toast, setToast] = useState(null)
   const [routeSegments, setRouteSegments] = useState([])
   const [segmentIndex, setSegmentIndex] = useState(0)
   const [searchQuery, setSearchQuery] = useState("");
   const [forcedRoom, setForcedRoom] = useState(null);
 
-  const location = useLocation()
-  const navigate = useNavigate()
-
-  const stampRooms = nodes.filter((p) => p.type === 'stamp')
-
   const visibleRouteSegments = getVisibleRouteSegments(routeSegments)
 
   // 経路検索中は、階段だけがある階を除いて、その経路が実際に通る階だけをフロア切替に表示する
   const routeFloors = visibleRouteSegments.length > 0 ? visibleRouteSegments.map((seg) => seg.floor) : null
-
-  // Handle arrival from a QR code scan (/stamp/:roomNumber redirected here)
-  useEffect(() => {
-    const state = location.state
-    if (!state) return
-
-    if (state.floor) setActiveFloor(state.floor)
-    if (state.highlightId) setHighlightedId(state.highlightId)
-    setCollected(getStamps())
-
-    if (state.toast) {
-      setToast(state.toast)
-      const t = setTimeout(() => setToast(null), 3000)
-      // clear the navigation state so refresh doesn't repeat the toast
-      navigate(location.pathname, { replace: true, state: null })
-      return () => clearTimeout(t)
-    }
-    navigate(location.pathname, { replace: true, state: null })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state])
 
   const handleSelectRoom = (room) => {
     // 教室を新しく検索・選択したら経路表示はクリアする(全フロア表示に戻す)

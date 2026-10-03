@@ -84,12 +84,16 @@ VITE_FIREBASE_STORAGE_BUCKET=your-project-id.firebasestorage.app
 VITE_FIREBASE_MESSAGING_SENDER_ID=123456789...
 VITE_FIREBASE_APP_ID=1:123456789...:web:abc123...
 
-# 任意: App Check を手動設定した場合のみ reCAPTCHA v3 の Site Key を設定
-VITE_APPCHECK_SITE_KEY=
+# 必須: Firebase App Check (reCAPTCHA v3) の Site Key
+VITE_APPCHECK_SITE_KEY=your-recaptcha-v3-site-key
 ```
 
 > [!CAUTION]
 > `.env` ファイルにはプロジェクト固有の識別子が含まれるため、Git にコミットしないでください（既に `.gitignore` に含まれています）。
+
+App Checkはクライアント側で必須初期化され、Firestore/StorageのSecurity Rulesでも有効なApp Checkトークンを要求します。Firebase ConsoleでreCAPTCHA v3のサイトキーを発行し、対象ドメインを登録してください。ローカル開発時はApp Checkのデバッグトークンを登録してから利用します。
+
+AuthenticationのApp Check強制はFirebase ConsoleのAuthentication設定で別途有効化してください。Firestore/Storageのルールだけではログイン試行へのApp Check強制はできません。
 
 ---
 

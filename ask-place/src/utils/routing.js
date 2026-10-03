@@ -9,7 +9,7 @@
  * edges が空/未指定の場合のみ autoGenerateEdges() で座標から接続関係を自動推定する:
  *  - 各フロアの branch / stairs / entrance を「廊下の骨格」とみなし、
  *    近傍数点(KNN)+ 最小全域木(MST)で互いに接続する(同フロア内のみ)
- *  - room / stamp は同じフロアの最も近い骨格ノードに接続する
+ *  - room は同じフロアの最も近い骨格ノードに接続する
  *  - 階段(stairs)の階をまたぐ接続は座標の近さでは"推測しない"。
  *    stairs ノードの `name`(A, B, C…のような階段の識別名)が完全一致するもの
  *    同士だけを、フロア順に隣接させて接続する。
@@ -22,7 +22,7 @@
 const CROSS_FLOOR_WEIGHT = 80 // 階段/EV移動のコスト(調整可能)
 const DEFAULT_FLOOR_ORDER = ['floor_1F', 'floor_2F', 'floor_3F', 'floor_4F', 'floor_5F']
 const HUB_TYPES = ['branch', 'stairs', 'entrance']
-const LEAF_TYPES = ['room', 'stamp']
+const LEAF_TYPES = ['room']
 
 function isStairNode(node) {
   return node?.type === 'stairs'

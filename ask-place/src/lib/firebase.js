@@ -11,6 +11,7 @@ const configKeys = [
   "VITE_FIREBASE_STORAGE_BUCKET",
   "VITE_FIREBASE_MESSAGING_SENDER_ID",
   "VITE_FIREBASE_APP_ID",
+  "VITE_APPCHECK_SITE_KEY",
 ];
 
 const missingConfigKeys = configKeys.filter((key) => !import.meta.env[key]);
@@ -47,8 +48,8 @@ export function isTrustedStorageUrl(value) {
   }
 }
 
-// App Check (reCAPTCHA v3等のキーが設定されている場合のみ初期化)
-if (typeof window !== "undefined" && import.meta.env.VITE_APPCHECK_SITE_KEY) {
+// App Checkは必須。トークンがない通信はSecurity Rules側でも拒否する。
+if (typeof window !== "undefined") {
   try {
     initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(import.meta.env.VITE_APPCHECK_SITE_KEY),

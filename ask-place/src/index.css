@@ -21,7 +21,6 @@
 
   /* マップ内要素（機能維持のためのピン・ルート・領域配色） */
   --room: #f4c430;
-  --stamp: #2f6fed;
   --branch: #9aa0a6;
   --entrance: #2fa84f;
   --stairs: #35b6c4;
@@ -308,7 +307,9 @@ input, select, textarea { font-family: inherit; }
   margin-top: 8px;
   border: 1px solid #e0e0e0;
   border-radius: var(--radius);
-  overflow: hidden;
+  max-height: 240px;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: #ffffff;
 }
 
@@ -461,7 +462,7 @@ input, select, textarea { font-family: inherit; }
   outline-offset: 2px;
 }
 
-/* ノードの周りに描画する赤い丸（固定枠＋パルス波紋） */
+/* ノードの周りに表示する固定の赤い丸 */
 .map-pin.highlighted::before {
   content: '';
   position: absolute;
@@ -474,48 +475,6 @@ input, select, textarea { font-family: inherit; }
   border-radius: 50%;
   box-sizing: border-box;
   pointer-events: none;
-  animation: pin-center-pulse 1.4s ease-in-out infinite;
-}
-
-.map-pin.highlighted::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 24px;
-  height: 24px;
-  transform: translate(-50%, -50%);
-  border: 2px solid #e0402f;
-  border-radius: 50%;
-  box-sizing: border-box;
-  pointer-events: none;
-  animation: pin-ring-pulse 1.4s ease-out infinite;
-}
-
-@keyframes pin-center-pulse {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    box-shadow: 0 0 6px rgba(224, 64, 47, 0.7);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.15);
-    box-shadow: 0 0 12px rgba(224, 64, 47, 0.9);
-  }
-}
-
-@keyframes pin-ring-pulse {
-  0% {
-    width: 24px;
-    height: 24px;
-    opacity: 1;
-    border-width: 3px;
-  }
-  100% {
-    width: 50px;
-    height: 50px;
-    opacity: 0;
-    border-width: 1px;
-  }
 }
 
 .map-legend {
@@ -583,7 +542,7 @@ input, select, textarea { font-family: inherit; }
 
 .route-line {
   fill: none;
-  stroke: #333333;
+  stroke: #eb6e25;
   stroke-width: 4;
   stroke-dasharray: 10 6;
   stroke-linecap: round;
@@ -591,7 +550,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 .route-node {
-  fill: #333333;
+  fill: #eb6e25;
   stroke: #fff;
   stroke-width: 1.5;
 }
@@ -755,16 +714,6 @@ input, select, textarea { font-family: inherit; }
 
 .room-card .row b { color: #000000; }
 
-.room-card .stamp-note {
-  font-size: 12px;
-  color: #333333;
-  background: #f5f5f5;
-  border: 1px solid #cccccc;
-  padding: 8px 10px;
-  border-radius: 8px;
-  margin-bottom: 14px;
-}
-
 .room-card .detail-link {
   display: block;
   width: 100%;
@@ -800,77 +749,6 @@ input, select, textarea { font-family: inherit; }
 
 .room-card button.close:hover {
   background: #f5f5f5;
-}
-
-/* ---------- Stamp progress ---------- */
-.stamp-block {
-  padding: 16px 18px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #ffffff;
-}
-
-.stamp-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
-}
-
-.stamp-header .search-label { margin-bottom: 0; }
-
-.stamp-count {
-  font-size: 13px;
-  font-weight: 700;
-  color: #000000;
-}
-
-.stamp-bar {
-  height: 8px;
-  background: #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.stamp-bar-fill {
-  height: 100%;
-  background: #666666;
-  transition: width .25s ease;
-}
-
-.stamp-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
-  gap: 8px;
-}
-
-.stamp-chip {
-  padding: 7px 4px;
-  text-align: center;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  border: 1.5px solid #e0e0e0;
-  color: #888888;
-  background: #ffffff;
-}
-
-.stamp-chip.done {
-  border-color: #000000;
-  color: #ffffff;
-  background: #000000;
-}
-
-.stamp-complete-banner {
-  margin-top: 12px;
-  padding: 12px;
-  text-align: center;
-  border-radius: 10px;
-  background: #555555;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.02em;
 }
 
 /* ---------- Footer ---------- */
@@ -939,7 +817,7 @@ input, select, textarea { font-family: inherit; }
   }
 }
 
-/* ---------- 混雑状況バッジ (StatusBadge) - 白・黒・灰色ベース ---------- */
+/* ---------- 混雑状況バッジ (StatusBadge) ---------- */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -974,30 +852,29 @@ input, select, textarea { font-family: inherit; }
 }
 .status-badge.size-lg .status-dot { width: 10px; height: 10px; }
 
-/* 混雑状況の色分け (白・黒・灰色ベース) */
-/* 空き: 白背景 + 灰色ボーダー + 濃いグレー文字 */
+/* 空き: 緑 */
 .status-empty {
-  background: #ffffff;
-  color: #333333;
-  border: 1.5px solid #999999;
+  background: #ecfdf3;
+  color: #166534;
+  border: 1.5px solid #86efac;
 }
-.status-empty .status-dot { background: #888888; }
+.status-empty .status-dot { background: #16a34a; }
 
-/* やや混雑: 薄い灰色背景 + 黒文字 */
+/* やや混雑: 黄色 */
 .status-somewhat {
-  background: #e5e5e5;
-  color: #000000;
-  border: 1.5px solid #888888;
+  background: #fffbeb;
+  color: #92400e;
+  border: 1.5px solid #fcd34d;
 }
-.status-somewhat .status-dot { background: #444444; }
+.status-somewhat .status-dot { background: #f59e0b; }
 
-/* 混雑: 黒背景 + 白文字 */
+/* 混雑: 赤 */
 .status-crowded {
-  background: #000000;
-  color: #ffffff;
-  border: 1.5px solid #000000;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1.5px solid #fca5a5;
 }
-.status-crowded .status-dot { background: #ffffff; }
+.status-crowded .status-dot { background: #dc2626; }
 
 /* ---------- 展示一覧ページ (RoomsListPage) ---------- */
 .rooms-page {
@@ -1326,14 +1203,15 @@ input, select, textarea { font-family: inherit; }
   overflow: hidden;
   background: #f5f5f5;
   border: 1px solid #e0e0e0;
-  aspect-ratio: 16 / 9;
+  min-height: 180px;
   position: relative;
 }
 
 .detail-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  max-height: 720px;
+  object-fit: contain;
   display: block;
   transition: opacity 0.3s;
 }
@@ -1647,15 +1525,15 @@ input, select, textarea { font-family: inherit; }
   border-radius: 8px;
   overflow: hidden;
   max-width: 320px;
-  aspect-ratio: 16 / 9;
   background: #f5f5f5;
   border: 1px solid #e0e0e0;
 }
 
 .photo-preview {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  max-height: 480px;
+  object-fit: contain;
   display: block;
 }
 

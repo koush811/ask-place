@@ -465,6 +465,7 @@ export default function SuperAdminPage({ user, onLogout }) {
                   id="sa-desc"
                   className="admin-textarea"
                   rows={4}
+                  maxLength={1000}
                   placeholder="展示説明文"
                   value={editDesc}
                   onChange={(e) => setEditDesc(e.target.value)}
