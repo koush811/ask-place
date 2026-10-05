@@ -84,14 +84,14 @@ VITE_FIREBASE_STORAGE_BUCKET=your-project-id.firebasestorage.app
 VITE_FIREBASE_MESSAGING_SENDER_ID=123456789...
 VITE_FIREBASE_APP_ID=1:123456789...:web:abc123...
 
-# 必須: Firebase App Check (reCAPTCHA v3) の Site Key
-VITE_APPCHECK_SITE_KEY=your-recaptcha-v3-site-key
+# 必須: Firebase App Check (reCAPTCHA Enterprise / Fraud Defense) の Site Key
+VITE_APPCHECK_SITE_KEY=your-recaptcha-enterprise-site-key
 ```
 
 > [!CAUTION]
 > `.env` ファイルにはプロジェクト固有の識別子が含まれるため、Git にコミットしないでください（既に `.gitignore` に含まれています）。
 
-App Checkはクライアント側で必須初期化され、Firestore/StorageのSecurity Rulesでも有効なApp Checkトークンを要求します。Firebase ConsoleでreCAPTCHA v3のサイトキーを発行し、対象ドメインを登録してください。ローカル開発時はApp Checkのデバッグトークンを登録してから利用します。
+App Checkはクライアント側で必須初期化され、Firestore/StorageのSecurity Rulesでも有効なApp Checkトークンを要求します。Google Cloud/Firebase ConsoleでreCAPTCHA Enterprise（Fraud Defense）のスコアベースのサイトキーを発行し、対象ドメインを登録してください。ローカル開発時はApp Checkのデバッグトークンを登録してから利用します。
 
 AuthenticationのApp Check強制はFirebase ConsoleのAuthentication設定で別途有効化してください。Firestore/Storageのルールだけではログイン試行へのApp Check強制はできません。
 
@@ -249,7 +249,7 @@ Vercel のプロジェクト設定「Environment Variables」に、Step 2 で設
 | `VITE_FIREBASE_STORAGE_BUCKET` | `your-project-id.firebasestorage.app` |
 | `VITE_FIREBASE_MESSAGING_SENDER_ID` | `123456789...` |
 | `VITE_FIREBASE_APP_ID` | `1:123456789...:web:abc123...` |
-| `VITE_APPCHECK_SITE_KEY` | *(App Check使用時のみ)* |
+| `VITE_APPCHECK_SITE_KEY` | `your-recaptcha-enterprise-site-key` |
 
 5. 「Deploy」をクリックして完了です。
    > [!NOTE]

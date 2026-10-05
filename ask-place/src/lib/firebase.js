@@ -2,7 +2,7 @@ import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 const configKeys = [
   "VITE_FIREBASE_API_KEY",
@@ -29,6 +29,25 @@ const firebaseConfig = {
 };
 
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+
+// Firebaseサービスを利用する前にApp Checkを初期化して、各リクエストへトークンを付与する。
+if (typeof window !== "undefined") {
+  try {
+    self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_APPCHECK_DEBUG_TOKEN;
+
+    console.log("[App Check] 初期化開始");
+
+    initializeAppCheck(app, {
+      provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_APPCHECK_SITE_KEY),
+      isTokenAutoRefreshEnabled: true,
+    });
+
+    console.log("[App Check] 初期化完了");
+  } catch (error) {
+    console.error("[Firebase App Check] 初期化エラー:", error);
+  }
+}
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
@@ -48,14 +67,3 @@ export function isTrustedStorageUrl(value) {
   }
 }
 
-// App Checkは必須。トークンがない通信はSecurity Rules側でも拒否する。
-if (typeof window !== "undefined") {
-  try {
-    initializeAppCheck(app, {
-      provider: new ReCaptchaV3Provider(import.meta.env.VITE_APPCHECK_SITE_KEY),
-      isTokenAutoRefreshEnabled: true,
-    });
-  } catch (error) {
-    console.error("[Firebase App Check] 初期化エラー:", error);
-  }
-}

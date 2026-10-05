@@ -12,6 +12,7 @@ import SuperAdminPage from "./SuperAdminPage";
 export default function AdminRouter() {
   const [currentUser, setCurrentUser] = useState(null);
   const [userRoleData, setUserRoleData] = useState(null);
+  const [roleError, setRoleError] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
@@ -21,13 +22,16 @@ export default function AdminRouter() {
         try {
           const roleData = await getUserRole(user.uid);
           setUserRoleData(roleData);
+          setRoleError(null);
         } catch (err) {
           console.error("[AdminRouter] ロール取得エラー:", err);
           setUserRoleData(null);
+          setRoleError(err);
         }
       } else {
         setCurrentUser(null);
         setUserRoleData(null);
+        setRoleError(null);
       }
       setAuthLoading(false);
     });
@@ -66,9 +70,11 @@ export default function AdminRouter() {
     return (
       <div className="admin-page-container">
         <div className="admin-error-card">
-          <h2>⚠️ 権限が見つかりません</h2>
+          <h2>{roleError ? "⚠️ 権限情報を取得できません" : "⚠️ 権限が見つかりません"}</h2>
           <p>
-            ログインしたアカウント (UID: {currentUser.uid}) に管理者ロールが割り当てられていません。
+            {roleError
+              ? "App CheckまたはFirestore Security Rulesでアクセスが拒否された可能性があります。App Checkの登録状態と対象ドメインを確認してください。"
+              : `ログインしたアカウント (UID: ${currentUser.uid}) に管理者ロールが割り当てられていません。`}
           </p>
           <button type="button" className="admin-logout-btn" onClick={handleLogout}>
             ログアウトして戻る
