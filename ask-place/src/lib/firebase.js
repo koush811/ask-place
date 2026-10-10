@@ -33,7 +33,9 @@ export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getA
 // Firebaseサービスを利用する前にApp Checkを初期化して、各リクエストへトークンを付与する。
 if (typeof window !== "undefined") {
   try {
-    self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_APPCHECK_DEBUG_TOKEN;
+    if (import.meta.env.DEV && import.meta.env.VITE_APPCHECK_DEBUG_TOKEN) {
+      self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_APPCHECK_DEBUG_TOKEN;
+    }
 
     console.log("[App Check] 初期化開始");
 
@@ -66,4 +68,3 @@ export function isTrustedStorageUrl(value) {
     return false;
   }
 }
-

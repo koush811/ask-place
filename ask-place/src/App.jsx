@@ -1,6 +1,7 @@
 import { Outlet, useLocation, Navigate } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
+import BottomNav from "./components/BottomNav.jsx";
 import { RoomsProvider } from "./context/RoomsContext.jsx";
 import { useSiteSettings } from "./context/SiteSettingsContext.jsx";
 
@@ -77,6 +78,7 @@ export default function App() {
         <div className="app-main-content">
           <Outlet />
         </div>
+        {!isAdminPath && <BottomNav />}
         <Footer />
       </div>
     </RoomsProvider>

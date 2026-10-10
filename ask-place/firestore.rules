@@ -1,0 +1,97 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function hasValidAppCheck() {
+      return request.app != null;
+    }
+
+    function hasUserDoc() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isSuperAdmin() {
+      return hasUserDoc() && userDoc().role == "super_admin";
+    }
+
+    function isClassAdminOf(roomId) {
+      return hasUserDoc()
+        && userDoc().role == "class_admin"
+        && userDoc().roomId == roomId;
+    }
+
+    match /users/{uid} {
+      // 自分自身の権限確認のみ許可。書き込みはクライアントから行わない(Admin SDK経由のみ)
+      allow read: if isSignedIn()
+        && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    match /rooms/{roomId} {
+      // 一般来場者:enabled:true の部屋のみ読み取り可能
+      allow read: if resource.data.enabled == true
+        || isSuperAdmin()
+        || isClassAdminOf(roomId);
+
+      // 更新:スーパー管理者は全部屋、クラス管理者は担当部屋の展示情報だけ
+      allow update: if hasValidAppCheck() && (isSuperAdmin()
+        || (
+          isClassAdminOf(roomId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            "title",
+            "description",
+            "status",
+            "imageUrl",
+            "updatedAt"
+          ])
+          && request.resource.data.title is string
+          && request.resource.data.description is string
+          && request.resource.data.title.size() <= 200
+          && request.resource.data.description.size() <= 1000
+          && request.resource.data.status in ["empty", "somewhat_crowded", "crowded"]
+          && (request.resource.data.imageUrl == null || request.resource.data.imageUrl is string)
+        ));
+
+      // 作成・削除はクライアントから行わない(事前にAdmin SDK等で全部屋分を作成しておく運用)
+      allow create, delete: if hasValidAppCheck() && isSuperAdmin();
+    }
+
+    match /settings/{settingId} {
+      // サイト公開設定等の全般設定: 誰でも閲覧可能
+      allow read: if true;
+      // 変更・更新・作成・削除はスーパー管理者のみ許可（クラス管理者は操作不可）
+      allow write: if settingId != "notification"
+        && hasValidAppCheck()
+        && isSuperAdmin();
+    }
+
+    match /settings/notification {
+      allow read: if true;
+      allow create, update: if hasValidAppCheck()
+        && isSuperAdmin()
+        && request.resource.data.keys().hasOnly([
+          "enabled",
+          "title",
+          "body",
+          "updatedAt",
+          "updatedBy"
+        ])
+        && request.resource.data.enabled is bool
+        && request.resource.data.title is string
+        && request.resource.data.body is string
+        && request.resource.data.title.size() <= 100
+        && request.resource.data.body.size() <= 2000
+        && request.resource.data.updatedBy == request.auth.uid;
+      allow delete: if hasValidAppCheck() && isSuperAdmin();
+    }
+  }
+}

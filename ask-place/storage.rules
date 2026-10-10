@@ -1,0 +1,44 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function hasValidAppCheck() {
+      return request.app != null;
+    }
+
+    function userDoc() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function userRoomId() {
+      return userDoc().roomId;
+    }
+
+    function userRole() {
+      return userDoc().role;
+    }
+
+    match /room/{roomId}/{fileName} {
+      // 読み取りは一般公開
+      allow read: if hasValidAppCheck();
+
+      // 作成・更新:自分の部屋のみ(class_admin)、または全部屋(super_admin)
+      // ファイルサイズ2MB以下・WebP/JPEGのみ許可。アプリが生成するファイル名以外は拒否する。
+      allow create, update: if hasValidAppCheck()
+        && isSignedIn()
+        && (userRole() == "super_admin" || userRoomId() == roomId)
+        && fileName.matches('^[A-Za-z0-9-]+\\.(webp|jpeg)$')
+        && request.resource.size <= 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/(webp|jpeg)');
+
+      // 削除:作成・更新と異なり、削除リクエストにはrequest.resourceがない
+      allow delete: if hasValidAppCheck()
+        && isSignedIn()
+        && (userRole() == "super_admin" || userRoomId() == roomId);
+    }
+  }
+}

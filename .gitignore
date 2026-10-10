@@ -5,5 +5,3 @@ dist
 !.env.example
 serviceAccountKey.json
 *.csv
-firestore.rules
-storage.rules

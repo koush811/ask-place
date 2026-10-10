@@ -91,9 +91,15 @@ VITE_APPCHECK_SITE_KEY=your-recaptcha-enterprise-site-key
 > [!CAUTION]
 > `.env` ファイルにはプロジェクト固有の識別子が含まれるため、Git にコミットしないでください（既に `.gitignore` に含まれています）。
 
-App Checkはクライアント側で必須初期化され、Firestore/StorageのSecurity Rulesでも有効なApp Checkトークンを要求します。Google Cloud/Firebase ConsoleでreCAPTCHA Enterprise（Fraud Defense）のスコアベースのサイトキーを発行し、対象ドメインを登録してください。ローカル開発時はApp Checkのデバッグトークンを登録してから利用します。
+App Checkはクライアント側で初期化され、Firestore/StorageのSecurity Rulesでも有効なApp Checkトークンを要求します。Google Cloud/Firebase ConsoleでreCAPTCHA Enterprise（Fraud Defense）のスコアベースのサイトキーを発行し、対象ドメインを登録してください。App Checkのデバッグトークンは開発環境でのみ使用し、本番環境の環境変数には設定しないでください。
 
 AuthenticationのApp Check強制はFirebase ConsoleのAuthentication設定で別途有効化してください。Firestore/Storageのルールだけではログイン試行へのApp Check強制はできません。
+
+### 全体通知の初期設定
+
+全体通知はFirestoreの `settings/notification` ドキュメントを使用します。ドキュメントが存在しない場合は通知なしとして扱われ、スーパー管理者画面からタイトル・本文の公開状態を更新できます。一般画面はこのドキュメントをリアルタイム購読します。
+
+通知の書き込みは `super_admin` のみ許可されます。タイトルは100文字以内、本文は2,000文字以内で、HTMLとしては解釈されません。
 
 ---
 

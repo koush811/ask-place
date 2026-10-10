@@ -11,6 +11,7 @@ import { uploadRoomImage, deleteRoomImage } from "../../lib/imageUpload";
 import { ROOM_STATUS_LABEL } from "../../lib/roomStatus";
 import StatusBadge from "../../components/StatusBadge";
 import { useSiteSettings } from "../../context/SiteSettingsContext";
+import { useNotification } from "../../context/NotificationContext";
 
 /**
  * スーパー管理者画面 (/admin - super_admin ログイン後) - 仕様書 第8.3章
@@ -21,6 +22,7 @@ import { useSiteSettings } from "../../context/SiteSettingsContext";
  */
 export default function SuperAdminPage({ user, onLogout }) {
   const { isPublished, toggleSitePublish } = useSiteSettings();
+  const { notification, updateNotification } = useNotification();
   const [sitePublishLoading, setSitePublishLoading] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,6 +43,10 @@ export default function SuperAdminPage({ user, onLogout }) {
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationBody, setNotificationBody] = useState("");
+  const [notificationEnabled, setNotificationEnabled] = useState(false);
+  const [notificationSaving, setNotificationSaving] = useState(false);
 
   // 全部屋一覧の取得 (スーパー管理者権限)
   const fetchAllRooms = async () => {
@@ -65,6 +71,38 @@ export default function SuperAdminPage({ user, onLogout }) {
   useEffect(() => {
     fetchAllRooms();
   }, []);
+
+  useEffect(() => {
+    setNotificationTitle(notification?.title || "");
+    setNotificationBody(notification?.body || "");
+    setNotificationEnabled(Boolean(notification));
+  }, [notification]);
+
+  const handleNotificationSave = async (event) => {
+    event.preventDefault();
+    setNotificationSaving(true);
+    setStatusMsg({ text: "", isError: false });
+
+    try {
+      await updateNotification({
+        enabled: notificationEnabled,
+        title: notificationTitle,
+        body: notificationBody,
+      });
+      setStatusMsg({
+        text: notificationEnabled ? "全体通知を公開しました。" : "全体通知を非公開にしました。",
+        isError: false,
+      });
+    } catch (err) {
+      console.error("[SuperAdmin] 全体通知の更新失敗:", err);
+      setStatusMsg({
+        text: `全体通知の更新に失敗しました: ${err.message || "権限がありません"}`,
+        isError: true,
+      });
+    } finally {
+      setNotificationSaving(false);
+    }
+  };
 
   // 選択中の部屋データをフォームに反映
   const selectRoomForEdit = (room) => {
@@ -328,6 +366,50 @@ export default function SuperAdminPage({ user, onLogout }) {
             )}
           </button>
         </div>
+      </section>
+
+      <section className="global-notification-admin-panel">
+        <div className="global-notification-admin-copy">
+          <span className="site-publish-title">全体通知</span>
+          <p>一般画面へリアルタイムで表示する通知です。タイトルと本文のみ設定できます。</p>
+        </div>
+        <form className="global-notification-form" onSubmit={handleNotificationSave}>
+          <label className="toggle-switch-label">
+            <input
+              type="checkbox"
+              checked={notificationEnabled}
+              onChange={(event) => setNotificationEnabled(event.target.checked)}
+            />
+            <span>通知を公開する</span>
+          </label>
+          <div className="form-field">
+            <label htmlFor="global-notification-title">タイトル</label>
+            <input
+              id="global-notification-title"
+              type="text"
+              className="admin-input"
+              maxLength={100}
+              value={notificationTitle}
+              onChange={(event) => setNotificationTitle(event.target.value)}
+              placeholder="例：会場からのお知らせ"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="global-notification-body">本文</label>
+            <textarea
+              id="global-notification-body"
+              className="admin-textarea"
+              rows={4}
+              maxLength={2000}
+              value={notificationBody}
+              onChange={(event) => setNotificationBody(event.target.value)}
+              placeholder="来場者へ伝える内容を入力してください"
+            />
+          </div>
+          <button type="submit" className="admin-submit-btn" disabled={notificationSaving}>
+            {notificationSaving ? "通知を保存中..." : "通知を保存"}
+          </button>
+        </form>
       </section>
 
       {statusMsg.text && (

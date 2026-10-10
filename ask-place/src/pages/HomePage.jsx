@@ -9,6 +9,7 @@ import RoomInfoModal from "../components/RoomInfoModal.jsx";
 import { useRooms } from "../context/RoomsContext";
 import { useSiteSettings } from "../context/SiteSettingsContext";
 import ImageSlider from "../components/imageSlide.jsx";
+import GlobalNotification from "../components/GlobalNotification.jsx";
 
 const { nodes, zones, floorOrder, floorLabels } = mapData;
 
@@ -227,6 +228,8 @@ export default function HomePage() {
   return (
     <main className="home-page">
       <ImageSlider />
+      
+      <GlobalNotification />
 
       {/* 展示一覧への誘導ボタン */}
       <div className="rooms-list-cta-wrap">
