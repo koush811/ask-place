@@ -37,22 +37,29 @@ export default function SearchForm({ points, floorLabels, onSelectRoom, onForceR
       </div>
 
       {results.length > 0 && (
-        <div className="search-results">
-          {results.map((r) => (
-            <button
-              key={r.id}
-              type="button"
-              className="search-result-item"
-              onClick={() => {
-                onSelectRoom(r);
-                onForceRoom?.(r.name);
+        <div className="search-select-wrap">
+          <select
+            className="search-select"
+            value=""
+            onChange={(e) => {
+              const selected = results.find((r) => r.id === e.target.value);
+              if (selected) {
+                onSelectRoom(selected);
+                onForceRoom?.(selected.name);
                 setQuery("");
-              }}
-            >
-              <span>{r.name}</span>
-              <span className="floor-tag">{floorLabels[r.floor]}</span>
-            </button>
-          ))}
+              }
+            }}
+            aria-label="教室の候補一覧"
+          >
+            <option value="" disabled>
+              候補を選択してください（{results.length}件）
+            </option>
+            {results.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.name}（{floorLabels[r.floor]}）
+              </option>
+            ))}
+          </select>
         </div>
       )}
 

@@ -8,7 +8,7 @@ const FLOOR_LABELS = {
   floor_5F: '5階',
 }
 
-export default function RoomInfoModal({ room, onClose }) {
+export default function RoomInfoModal({ room, hasDetailPage = false, onClose, onShowMap }) {
   if (!room) return null
 
   return (
@@ -30,10 +30,15 @@ export default function RoomInfoModal({ room, onClose }) {
           </div>
         </div>
         
-        {room.type === 'room' && (
-          <Link className="detail-link" to={`/room/${room.name || room.id}`}>
+        {room.type === 'room' && hasDetailPage && (
+          <Link className="detail-link" to={`/room/${room.name || room.id}`} onClick={onClose}>
             詳細を見る
           </Link>
+        )}
+        {room.type === 'room' && onShowMap && (
+          <button type="button" className="map-location-link" onClick={onShowMap}>
+            マップで位置を確認
+          </button>
         )}
         <button className="close" onClick={onClose}>閉じる</button>
       </div>

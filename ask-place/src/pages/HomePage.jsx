@@ -130,6 +130,27 @@ export default function HomePage() {
     }
   };
 
+  const selectedRoomDetail = selectedRoom
+    ? rooms.find(
+        (room) =>
+          room.id === selectedRoom.id ||
+          room.id === selectedRoom.name ||
+          room.roomName === selectedRoom.id ||
+          room.roomName === selectedRoom.name
+      )
+    : null;
+
+  const handleShowSelectedRoomOnMap = () => {
+    setSelectedRoom(null);
+    setActiveFloor(selectedRoom?.floor || activeFloor);
+    setTimeout(() => {
+      document.querySelector(".map-section")?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 0);
+  };
+
   // 経路検索実行時
   const handleRouteComputed = (segments, meta) => {
     setSelectedRoom(null);
@@ -307,7 +328,9 @@ export default function HomePage() {
 
       <RoomInfoModal
         room={selectedRoom}
+        hasDetailPage={Boolean(selectedRoomDetail)}
         onClose={() => setSelectedRoom(null)}
+        onShowMap={handleShowSelectedRoomOnMap}
       />
     </main>
   );

@@ -215,15 +215,18 @@ export default function SuperAdminPage({ user, onLogout }) {
     setSaving(true);
     setStatusMsg({ text: "", isError: false });
 
+    let operation = "Firestore更新";
     try {
       let finalImageUrl = currentImageUrl;
 
       // 新規写真アップロード
       if (selectedFile) {
+        operation = "Storage画像アップロード";
         setStatusMsg({ text: "写真をアップロード中...", isError: false });
         finalImageUrl = await uploadRoomImage(selectedRoomId, selectedFile, currentImageUrl);
       }
 
+      operation = "Firestore更新";
       setStatusMsg({ text: "部屋情報を更新中...", isError: false });
       const roomRef = doc(db, "rooms", selectedRoomId);
       await updateDoc(roomRef, {
@@ -258,8 +261,17 @@ export default function SuperAdminPage({ user, onLogout }) {
       setPreviewUrl(null);
       setStatusMsg({ text: `✨ [${selectedRoomId}] を保存しました！`, isError: false });
     } catch (err) {
-      console.error("[SuperAdmin] 保存失敗:", err);
-      setStatusMsg({ text: "保存に失敗しました。", isError: true });
+      const errorCode = err?.code || "unknown";
+      const errorMessage = err?.message || "原因不明のエラー";
+      console.error(`[SuperAdmin] ${operation}失敗:`, {
+        code: errorCode,
+        message: errorMessage,
+        error: err,
+      });
+      setStatusMsg({
+        text: `${operation}に失敗しました (${errorCode}): ${errorMessage}`,
+        isError: true,
+      });
     } finally {
       setSaving(false);
     }

@@ -23,22 +23,25 @@ service firebase.storage {
     }
 
     match /room/{roomId}/{fileName} {
-      // 読み取りは一般公開
-      allow read: if hasValidAppCheck();
+      // 一般公開はApp Check必須。スーパー管理者は管理画面でURL取得できるよう許可。
+      allow read: if hasValidAppCheck()
+        || (isSignedIn() && userRole() == "super_admin");
 
       // 作成・更新:自分の部屋のみ(class_admin)、または全部屋(super_admin)
       // ファイルサイズ2MB以下・WebP/JPEGのみ許可。アプリが生成するファイル名以外は拒否する。
-      allow create, update: if hasValidAppCheck()
-        && isSignedIn()
-        && (userRole() == "super_admin" || userRoomId() == roomId)
+      allow create, update: if isSignedIn()
+        && (userRole() == "super_admin" || (
+          hasValidAppCheck()
+          && userRoomId() == roomId
+        ))
         && fileName.matches('^[A-Za-z0-9-]+\\.(webp|jpeg)$')
         && request.resource.size <= 2 * 1024 * 1024
         && request.resource.contentType.matches('image/(webp|jpeg)');
 
       // 削除:作成・更新と異なり、削除リクエストにはrequest.resourceがない
-      allow delete: if hasValidAppCheck()
-        && isSignedIn()
-        && (userRole() == "super_admin" || userRoomId() == roomId);
+      allow delete: if isSignedIn()
+        && (userRole() == "super_admin"
+          || (hasValidAppCheck() && userRoomId() == roomId));
     }
   }
 }

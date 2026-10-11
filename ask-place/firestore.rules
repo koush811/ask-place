@@ -43,9 +43,10 @@ service cloud.firestore {
         || isClassAdminOf(roomId);
 
       // 更新:スーパー管理者は全部屋、クラス管理者は担当部屋の展示情報だけ
-      allow update: if hasValidAppCheck() && (isSuperAdmin()
+      allow update: if (isSuperAdmin()
         || (
-          isClassAdminOf(roomId)
+          hasValidAppCheck()
+          && isClassAdminOf(roomId)
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
             "title",
             "description",
@@ -62,7 +63,7 @@ service cloud.firestore {
         ));
 
       // 作成・削除はクライアントから行わない(事前にAdmin SDK等で全部屋分を作成しておく運用)
-      allow create, delete: if hasValidAppCheck() && isSuperAdmin();
+      allow create, delete: if isSuperAdmin();
     }
 
     match /settings/{settingId} {
@@ -70,14 +71,12 @@ service cloud.firestore {
       allow read: if true;
       // 変更・更新・作成・削除はスーパー管理者のみ許可（クラス管理者は操作不可）
       allow write: if settingId != "notification"
-        && hasValidAppCheck()
         && isSuperAdmin();
     }
 
     match /settings/notification {
       allow read: if true;
-      allow create, update: if hasValidAppCheck()
-        && isSuperAdmin()
+      allow create, update: if isSuperAdmin()
         && request.resource.data.keys().hasOnly([
           "enabled",
           "title",
@@ -91,7 +90,7 @@ service cloud.firestore {
         && request.resource.data.title.size() <= 100
         && request.resource.data.body.size() <= 2000
         && request.resource.data.updatedBy == request.auth.uid;
-      allow delete: if hasValidAppCheck() && isSuperAdmin();
+      allow delete: if isSuperAdmin();
     }
   }
 }

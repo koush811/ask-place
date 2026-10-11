@@ -56,7 +56,6 @@ input, select, textarea { font-family: inherit; }
 }
 
 .app-main-content {
-  padding-top: 68px;
   padding-bottom: 76px;
 }
 
@@ -167,15 +166,14 @@ input, select, textarea { font-family: inherit; }
   background: #ffffff;
   color: #000000;
   padding: 14px 18px;
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(100%, 720px);
   z-index: 102;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .header-brand .header-title-link {
@@ -412,6 +410,29 @@ input, select, textarea { font-family: inherit; }
 }
 
 .search-input:focus {
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+.search-select-wrap {
+  margin-top: 8px;
+  position: relative;
+}
+
+.search-select {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid #555555;
+  border-radius: var(--radius);
+  background-color: #ffffff;
+  color: #000000;
+  cursor: pointer;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.search-select:focus {
   border-color: #000000;
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
 }
@@ -780,7 +801,7 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .room-card {
@@ -845,6 +866,26 @@ input, select, textarea { font-family: inherit; }
 
 .room-card .detail-link:hover {
   background: #333333;
+}
+
+.room-card .map-location-link {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  margin-bottom: 10px;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.room-card .map-location-link:hover {
+  background: #f5f5f5;
 }
 
 .room-card button.close {
@@ -1573,6 +1614,12 @@ input, select, textarea { font-family: inherit; }
   color: #000000;
   outline: none;
   transition: border-color 0.15s;
+}
+
+.admin-textarea {
+  max-width: 100%;
+  max-height: 320px;
+  resize: vertical;
 }
 
 .admin-input:focus, .admin-select:focus, .admin-textarea:focus {

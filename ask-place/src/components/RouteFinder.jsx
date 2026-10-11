@@ -104,18 +104,25 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
           />
         </div>
         {startResults.length > 0 && (
-          <div className="search-results">
-            {startResults.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                className="search-result-item"
-                onClick={() => pickStart(p)}
-              >
-                <span>{p.name}</span>
-                <span className="floor-tag">{floorLabels[p.floor]}</span>
-              </button>
-            ))}
+          <div className="search-select-wrap">
+            <select
+              className="search-select"
+              value=""
+              onChange={(e) => {
+                const p = options.find((opt) => opt.id === e.target.value);
+                if (p) pickStart(p);
+              }}
+              aria-label="出発地の候補一覧"
+            >
+              <option value="" disabled>
+                候補を選択してください（{startResults.length}件）
+              </option>
+              {startResults.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}（{floorLabels[p.floor]}）
+                </option>
+              ))}
+            </select>
           </div>
         )}
         {showStartEmpty && <div className="search-empty">該当する地点が見つかりません</div>}
@@ -136,18 +143,25 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
           />
         </div>
         {endResults.length > 0 && (
-          <div className="search-results">
-            {endResults.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                className="search-result-item"
-                onClick={() => pickEnd(p)}
-              >
-                <span>{p.name}</span>
-                <span className="floor-tag">{floorLabels[p.floor]}</span>
-              </button>
-            ))}
+          <div className="search-select-wrap">
+            <select
+              className="search-select"
+              value=""
+              onChange={(e) => {
+                const p = options.find((opt) => opt.id === e.target.value);
+                if (p) pickEnd(p);
+              }}
+              aria-label="目的地の候補一覧"
+            >
+              <option value="" disabled>
+                候補を選択してください（{endResults.length}件）
+              </option>
+              {endResults.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}（{floorLabels[p.floor]}）
+                </option>
+              ))}
+            </select>
           </div>
         )}
         {showEndEmpty && <div className="search-empty">該当する地点が見つかりません</div>}

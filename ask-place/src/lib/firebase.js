@@ -2,7 +2,11 @@ import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import {
+  getToken,
+  initializeAppCheck,
+  ReCaptchaEnterpriseProvider,
+} from "firebase/app-check";
 
 const configKeys = [
   "VITE_FIREBASE_API_KEY",
@@ -29,6 +33,7 @@ const firebaseConfig = {
 };
 
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+export let appCheck = null;
 
 // Firebaseサービスを利用する前にApp Checkを初期化して、各リクエストへトークンを付与する。
 if (typeof window !== "undefined") {
@@ -39,7 +44,7 @@ if (typeof window !== "undefined") {
 
     console.log("[App Check] 初期化開始");
 
-    initializeAppCheck(app, {
+    appCheck = initializeAppCheck(app, {
       provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_APPCHECK_SITE_KEY),
       isTokenAutoRefreshEnabled: true,
     });
@@ -53,6 +58,17 @@ if (typeof window !== "undefined") {
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+export async function getAppCheckToken() {
+  if (!appCheck) {
+    throw new Error("Firebase App Checkが初期化されていません。");
+  }
+  const result = await getToken(appCheck, true);
+  if (!result.token) {
+    throw new Error("Firebase App Checkトークンを取得できませんでした。");
+  }
+  return result.token;
+}
 
 export function isTrustedStorageUrl(value) {
   if (typeof value !== "string") return false;
