@@ -163,12 +163,11 @@ input, select, textarea { font-family: inherit; }
 
 /* ---------- Header ---------- */
 .site-header {
+  position: relative;
+  z-index: 200;
   background: #ffffff;
   color: #000000;
   padding: 14px 18px;
-  position: sticky;
-  top: 0;
-  z-index: 102;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -197,12 +196,16 @@ input, select, textarea { font-family: inherit; }
 }
 
 .header-nav {
+  position: relative;
+  z-index: 201;
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
 .header-nav .nav-link {
+  position: relative;
+  z-index: 202;
   color: #555555;
   text-decoration: none;
   font-size: 13px;

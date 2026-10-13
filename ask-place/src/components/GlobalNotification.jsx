@@ -7,7 +7,7 @@ export default function GlobalNotification() {
   return (
     <div>
       <h2 className="search-label global-title">全体通知</h2>
-      <aside className="global-notification" role="status" aria-live="polite">
+      <aside className="global-notification" role="alert" aria-live="assertive">
         {notification.title && <h2>{notification.title}</h2>}
         {notification.body && <p>{notification.body}</p>}
       </aside>

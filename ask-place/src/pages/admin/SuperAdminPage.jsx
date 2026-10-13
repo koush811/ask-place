@@ -89,16 +89,12 @@ export default function SuperAdminPage({ user, onLogout }) {
         title: notificationTitle,
         body: notificationBody,
       });
-      setStatusMsg({
-        text: notificationEnabled ? "全体通知を公開しました。" : "全体通知を非公開にしました。",
-        isError: false,
-      });
+      window.alert(
+        notificationEnabled ? "全体通知を公開しました。" : "全体通知を非公開にしました。"
+      );
     } catch (err) {
       console.error("[SuperAdmin] 全体通知の更新失敗:", err);
-      setStatusMsg({
-        text: `全体通知の更新に失敗しました: ${err.message || "権限がありません"}`,
-        isError: true,
-      });
+      window.alert(`全体通知の更新に失敗しました: ${err.message || "権限がありません"}`);
     } finally {
       setNotificationSaving(false);
     }
@@ -427,7 +423,8 @@ export default function SuperAdminPage({ user, onLogout }) {
       {statusMsg.text && (
         <div
           className={`admin-status-message ${statusMsg.isError ? "error" : "success"}`}
-          role="status"
+          role="alert"
+          aria-live="assertive"
         >
           {statusMsg.text}
         </div>
