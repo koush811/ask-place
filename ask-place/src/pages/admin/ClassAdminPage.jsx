@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../lib/firebase";
+import { db, getAppCheckToken } from "../../lib/firebase";
 import { uploadRoomImage } from "../../lib/imageUpload";
 import { ROOM_STATUS_LABEL } from "../../lib/roomStatus";
 
@@ -17,6 +17,12 @@ export default function ClassAdminPage({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [statusMsg, setStatusMsg] = useState({ text: "", isError: false });
+
+  useEffect(() => {
+    if (statusMsg.text && !statusMsg.text.includes("中...")) {
+      window.alert(statusMsg.text);
+    }
+  }, [statusMsg]);
 
   // 編集フォーム状態
   const [title, setTitle] = useState("");
@@ -81,6 +87,9 @@ export default function ClassAdminPage({ user, onLogout }) {
     setStatusMsg({ text: "", isError: false });
 
     try {
+      // Firestore rules require a valid App Check token for class_admin updates.
+      await getAppCheckToken();
+
       let finalImageUrl = currentImageUrl;
 
       // 1. 新しい写真がある場合、先に圧縮・アップロードを行う
@@ -106,8 +115,15 @@ export default function ClassAdminPage({ user, onLogout }) {
       setStatusMsg({ text: "✨ 正常に保存されました！", isError: false });
     } catch (err) {
       console.error("[ClassAdmin] 更新失敗:", err);
+      const errorCode = err?.code || "unknown";
+      const errorMessage = err?.message || "詳細不明のエラー";
+      const userMessage = errorCode === "permission-denied"
+        ? "保存が拒否されました。App Checkの許可ドメイン・トークン設定、または担当教室の権限設定をご確認ください。"
+        : errorMessage.includes("App Check") || errorMessage.includes("app check")
+          ? `App Checkトークンを取得できませんでした。設定をご確認ください。（${errorMessage}）`
+          : `保存に失敗しました（${errorCode}）。通信環境をご確認ください。`;
       setStatusMsg({
-        text: "保存に失敗しました。画像サイズや通信環境をご確認ください。",
+        text: userMessage,
         isError: true,
       });
     } finally {
@@ -139,17 +155,6 @@ export default function ClassAdminPage({ user, onLogout }) {
           ログアウト
         </button>
       </header>
-
-      {statusMsg.text && (
-        <div
-          className={`admin-status-message ${
-            statusMsg.isError ? "error" : "success"
-          }`}
-          role="status"
-        >
-          {statusMsg.text}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} className="admin-edit-form">
         {/* 展示タイトル */}

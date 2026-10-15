@@ -164,6 +164,7 @@ export function MapLegend() {
   const otherLabels = {
     entrance: '入口',
     stairs: '階段 / EV',
+    toilet: 'トイレ',
   }
   return (
     <div className="map-legend">

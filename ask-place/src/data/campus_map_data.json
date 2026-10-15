@@ -181,7 +181,7 @@
       "floor": "floor_4F",
       "x": 629,
       "y": 209,
-      "name": "E412",
+      "name": "E411",
       "type": "room"
     },
     {
@@ -572,7 +572,7 @@
       "id": "N081",
       "floor": "floor_4F",
       "x": 622,
-      "y": 324,
+      "y": 325,
       "name": "N081",
       "type": "branch"
     },
@@ -2177,6 +2177,54 @@
       "type": "room"
     },
     {
+      "id": "N311",
+      "floor": "floor_2F",
+      "x": 95,
+      "y": 405,
+      "name": "S202",
+      "type": "room"
+    },
+    {
+      "id": "N312",
+      "floor": "floor_2F",
+      "x": 228,
+      "y": 405,
+      "name": "S207",
+      "type": "room"
+    },
+    {
+      "id": "N313",
+      "floor": "floor_2F",
+      "x": 202,
+      "y": 405,
+      "name": "S206",
+      "type": "room"
+    },
+    {
+      "id": "N314",
+      "floor": "floor_2F",
+      "x": 178,
+      "y": 405,
+      "name": "S205",
+      "type": "room"
+    },
+    {
+      "id": "N315",
+      "floor": "floor_2F",
+      "x": 153,
+      "y": 405,
+      "name": "S204",
+      "type": "room"
+    },
+    {
+      "id": "N316",
+      "floor": "floor_2F",
+      "x": 116,
+      "y": 405,
+      "name": "S203",
+      "type": "room"
+    },
+    {
       "id": "N317",
       "floor": "floor_2F",
       "x": 301,
@@ -2821,7 +2869,7 @@
       "floor": "floor_2F",
       "x": 595,
       "y": 77,
-      "name": "入口(高校)",
+      "name": "入り口(高校)",
       "type": "entrance"
     },
     {
@@ -3281,6 +3329,86 @@
       "type": "room"
     },
     {
+      "id": "N481",
+      "floor": "floor_1F",
+      "x": 60,
+      "y": 393,
+      "name": "S101",
+      "type": "room"
+    },
+    {
+      "id": "N482",
+      "floor": "floor_1F",
+      "x": 98,
+      "y": 393,
+      "name": "S102",
+      "type": "room"
+    },
+    {
+      "id": "N483",
+      "floor": "floor_1F",
+      "x": 189,
+      "y": 393,
+      "name": "S103",
+      "type": "room"
+    },
+    {
+      "id": "N484",
+      "floor": "floor_1F",
+      "x": 208,
+      "y": 393,
+      "name": "S104",
+      "type": "room"
+    },
+    {
+      "id": "N485",
+      "floor": "floor_1F",
+      "x": 301,
+      "y": 393,
+      "name": "S105",
+      "type": "room"
+    },
+    {
+      "id": "N486",
+      "floor": "floor_1F",
+      "x": 340,
+      "y": 393,
+      "name": "S106",
+      "type": "room"
+    },
+    {
+      "id": "N487",
+      "floor": "floor_1F",
+      "x": 357,
+      "y": 393,
+      "name": "S107",
+      "type": "room"
+    },
+    {
+      "id": "N488",
+      "floor": "floor_1F",
+      "x": 374,
+      "y": 393,
+      "name": "S108",
+      "type": "room"
+    },
+    {
+      "id": "N489",
+      "floor": "floor_1F",
+      "x": 413,
+      "y": 393,
+      "name": "S109",
+      "type": "room"
+    },
+    {
+      "id": "N490",
+      "floor": "floor_1F",
+      "x": 488,
+      "y": 393,
+      "name": "S111",
+      "type": "room"
+    },
+    {
       "id": "N491",
       "floor": "floor_1F",
       "x": 255,
@@ -3717,8 +3845,272 @@
       "floor": "floor_1F",
       "x": 258,
       "y": 418,
-      "name": "入口(附属中学校)",
+      "name": "入り口(附属中学校)",
       "type": "entrance"
+    },
+    {
+      "id": "N551",
+      "floor": "floor_1F",
+      "x": 255,
+      "y": 30,
+      "name": "体育館方面",
+      "type": "room"
+    },
+    {
+      "id": "N560",
+      "floor": "floor_5F",
+      "x": 20,
+      "y": 24,
+      "name": "K",
+      "type": "stairs"
+    },
+    {
+      "id": "N561",
+      "floor": "floor_4F",
+      "x": 19,
+      "y": 24,
+      "name": "K",
+      "type": "stairs"
+    },
+    {
+      "id": "N562",
+      "floor": "floor_4F",
+      "x": 33,
+      "y": 389,
+      "name": "L",
+      "type": "stairs"
+    },
+    {
+      "id": "N563",
+      "floor": "floor_3F",
+      "x": 22,
+      "y": 22,
+      "name": "K",
+      "type": "stairs"
+    },
+    {
+      "id": "N564",
+      "floor": "floor_3F",
+      "x": 23,
+      "y": 88,
+      "name": "N564",
+      "type": "branch"
+    },
+    {
+      "id": "N565",
+      "floor": "floor_3F",
+      "x": 264,
+      "y": 88,
+      "name": "N565",
+      "type": "branch"
+    },
+    {
+      "id": "N568",
+      "floor": "floor_1F",
+      "x": 312,
+      "y": 218,
+      "name": "コネクトモール",
+      "type": "exhibit"
+    },
+    {
+      "id": "N569",
+      "floor": "floor_3F",
+      "x": 257,
+      "y": 433,
+      "name": "S棟3階廊下",
+      "type": "exhibit"
+    },
+    {
+      "id": "N570",
+      "floor": "floor_4F",
+      "x": 263,
+      "y": 424,
+      "name": "S棟4階廊下",
+      "type": "exhibit"
+    },
+    {
+      "id": "N571",
+      "floor": "floor_1F",
+      "x": 226,
+      "y": 46,
+      "name": "N571",
+      "type": "toilet"
+    },
+    {
+      "id": "N572",
+      "floor": "floor_1F",
+      "x": 632,
+      "y": 41,
+      "name": "N572",
+      "type": "toilet"
+    },
+    {
+      "id": "N573",
+      "floor": "floor_1F",
+      "x": 587,
+      "y": 304,
+      "name": "N573",
+      "type": "toilet"
+    },
+    {
+      "id": "N574",
+      "floor": "floor_2F",
+      "x": 244,
+      "y": 59,
+      "name": "N574",
+      "type": "toilet"
+    },
+    {
+      "id": "N575",
+      "floor": "floor_2F",
+      "x": 603,
+      "y": 320,
+      "name": "N575",
+      "type": "toilet"
+    },
+    {
+      "id": "N576",
+      "floor": "floor_2F",
+      "x": 648,
+      "y": 56,
+      "name": "N576",
+      "type": "toilet"
+    },
+    {
+      "id": "N577",
+      "floor": "floor_5F",
+      "x": 226,
+      "y": 39,
+      "name": "N577",
+      "type": "toilet"
+    },
+    {
+      "id": "N578",
+      "floor": "floor_4F",
+      "x": 225,
+      "y": 41,
+      "name": "N578",
+      "type": "toilet"
+    },
+    {
+      "id": "N579",
+      "floor": "floor_4F",
+      "x": 593,
+      "y": 311,
+      "name": "N579",
+      "type": "toilet"
+    },
+    {
+      "id": "N580",
+      "floor": "floor_4F",
+      "x": 636,
+      "y": 48,
+      "name": "N580",
+      "type": "toilet"
+    },
+    {
+      "id": "N581",
+      "floor": "floor_3F",
+      "x": 229,
+      "y": 38,
+      "name": "N581",
+      "type": "toilet"
+    },
+    {
+      "id": "N582",
+      "floor": "floor_3F",
+      "x": 238,
+      "y": 399,
+      "name": "N582",
+      "type": "toilet"
+    },
+    {
+      "id": "N583",
+      "floor": "floor_3F",
+      "x": 639,
+      "y": 42,
+      "name": "N583",
+      "type": "toilet"
+    },
+    {
+      "id": "N584",
+      "floor": "floor_1F",
+      "x": 226,
+      "y": 61,
+      "name": "N584",
+      "type": "branch"
+    },
+    {
+      "id": "N587",
+      "floor": "floor_1F",
+      "x": 618,
+      "y": 41,
+      "name": "N587",
+      "type": "branch"
+    },
+    {
+      "id": "N590",
+      "floor": "floor_1F",
+      "x": 587,
+      "y": 322,
+      "name": "N590",
+      "type": "branch"
+    },
+    {
+      "id": "N592",
+      "floor": "floor_2F",
+      "x": 635,
+      "y": 56,
+      "name": "N592",
+      "type": "branch"
+    },
+    {
+      "id": "N593",
+      "floor": "floor_2F",
+      "x": 603,
+      "y": 333,
+      "name": "N593",
+      "type": "branch"
+    },
+    {
+      "id": "N594",
+      "floor": "floor_3F",
+      "x": 229,
+      "y": 22,
+      "name": "N594",
+      "type": "branch"
+    },
+    {
+      "id": "N596",
+      "floor": "floor_4F",
+      "x": 225,
+      "y": 25,
+      "name": "N596",
+      "type": "branch"
+    },
+    {
+      "id": "N597",
+      "floor": "floor_4F",
+      "x": 593,
+      "y": 325,
+      "name": "N597",
+      "type": "branch"
+    },
+    {
+      "id": "N598",
+      "floor": "floor_5F",
+      "x": 226,
+      "y": 24,
+      "name": "N598",
+      "type": "branch"
+    },
+    {
+      "id": "N604",
+      "floor": "floor_3F",
+      "x": 42,
+      "y": 385,
+      "name": "L",
+      "type": "stairs"
     }
   ],
   "edges": [
@@ -4108,13 +4500,6 @@
       "crossFloor": false
     },
     {
-      "id": "E075",
-      "from": "N082",
-      "to": "N081",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
       "id": "E076",
       "from": "N055",
       "to": "N084",
@@ -4146,13 +4531,6 @@
       "id": "E080",
       "from": "N087",
       "to": "N088",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
-      "id": "E082",
-      "from": "N048",
-      "to": "N089",
       "blocked": false,
       "crossFloor": false
     },
@@ -4437,13 +4815,6 @@
       "crossFloor": false
     },
     {
-      "id": "E130",
-      "from": "N116",
-      "to": "N119",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
       "id": "E131",
       "from": "N128",
       "to": "N052",
@@ -4489,7 +4860,7 @@
       "id": "E137",
       "from": "N131",
       "to": "N132",
-      "blocked": true,
+      "blocked": false,
       "crossFloor": false
     },
     {
@@ -4580,13 +4951,6 @@
       "id": "E154",
       "from": "N155",
       "to": "N156",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
-      "id": "E155",
-      "from": "N155",
-      "to": "N157",
       "blocked": false,
       "crossFloor": false
     },
@@ -4762,13 +5126,6 @@
       "id": "E184",
       "from": "N191",
       "to": "N190",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
-      "id": "E185",
-      "from": "N190",
-      "to": "N156",
       "blocked": false,
       "crossFloor": false
     },
@@ -5333,13 +5690,6 @@
       "crossFloor": false
     },
     {
-      "id": "E287",
-      "from": "N328",
-      "to": "N256",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
       "id": "E288",
       "from": "N260",
       "to": "N330",
@@ -5469,13 +5819,6 @@
       "id": "E308",
       "from": "N339",
       "to": "N333",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
-      "id": "E309",
-      "from": "N339",
-      "to": "N343",
       "blocked": false,
       "crossFloor": false
     },
@@ -6362,13 +6705,6 @@
       "crossFloor": false
     },
     {
-      "id": "E442",
-      "from": "N418",
-      "to": "N433",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
       "id": "E443",
       "from": "N433",
       "to": "N435",
@@ -6589,13 +6925,6 @@
       "id": "E475",
       "from": "N517",
       "to": "N458",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
-      "id": "E476",
-      "from": "N517",
-      "to": "N516",
       "blocked": false,
       "crossFloor": false
     },
@@ -7188,13 +7517,6 @@
       "crossFloor": false
     },
     {
-      "id": "E561",
-      "from": "N542",
-      "to": "N525",
-      "blocked": false,
-      "crossFloor": false
-    },
-    {
       "id": "E562",
       "from": "N161",
       "to": "N543",
@@ -7263,10 +7585,488 @@
       "to": "N550",
       "blocked": false,
       "crossFloor": false
+    },
+    {
+      "id": "E581",
+      "from": "N418",
+      "to": "N551",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E582",
+      "from": "N194",
+      "to": "N563",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E583",
+      "from": "N563",
+      "to": "N564",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E584",
+      "from": "N564",
+      "to": "N151",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E585",
+      "from": "N564",
+      "to": "N565",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E586",
+      "from": "N155",
+      "to": "N565",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E587",
+      "from": "N565",
+      "to": "N157",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E588",
+      "from": "N561",
+      "to": "N093",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E589",
+      "from": "N112",
+      "to": "N560",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E590",
+      "from": "N563",
+      "to": "N561",
+      "blocked": false,
+      "crossFloor": true
+    },
+    {
+      "id": "E591",
+      "from": "N561",
+      "to": "N560",
+      "blocked": false,
+      "crossFloor": true
+    },
+    {
+      "id": "E592",
+      "from": "N079",
+      "to": "N562",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E593",
+      "from": "N433",
+      "to": "N584",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E594",
+      "from": "N584",
+      "to": "N418",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E595",
+      "from": "N571",
+      "to": "N584",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E597",
+      "from": "N517",
+      "to": "N587",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E598",
+      "from": "N587",
+      "to": "N516",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E599",
+      "from": "N572",
+      "to": "N587",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E600",
+      "from": "N542",
+      "to": "N590",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E601",
+      "from": "N525",
+      "to": "N590",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E603",
+      "from": "N590",
+      "to": "N573",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E604",
+      "from": "N385",
+      "to": "N574",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E605",
+      "from": "N328",
+      "to": "N592",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E606",
+      "from": "N592",
+      "to": "N256",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E607",
+      "from": "N576",
+      "to": "N592",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E608",
+      "from": "N343",
+      "to": "N593",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E609",
+      "from": "N593",
+      "to": "N339",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E611",
+      "from": "N575",
+      "to": "N593",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E612",
+      "from": "N190",
+      "to": "N594",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E613",
+      "from": "N156",
+      "to": "N594",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E614",
+      "from": "N594",
+      "to": "N581",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E615",
+      "from": "N583",
+      "to": "N209",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E616",
+      "from": "N582",
+      "to": "N170",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E617",
+      "from": "N089",
+      "to": "N596",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E618",
+      "from": "N596",
+      "to": "N048",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E619",
+      "from": "N578",
+      "to": "N596",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E620",
+      "from": "N057",
+      "to": "N580",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E621",
+      "from": "N081",
+      "to": "N597",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E622",
+      "from": "N597",
+      "to": "N082",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E623",
+      "from": "N579",
+      "to": "N597",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E624",
+      "from": "N116",
+      "to": "N598",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E625",
+      "from": "N598",
+      "to": "N119",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E626",
+      "from": "N598",
+      "to": "N577",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E627",
+      "from": "N046",
+      "to": "N570",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E628",
+      "from": "N569",
+      "to": "N164",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E629",
+      "from": "N568",
+      "to": "N492",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E630",
+      "from": "N246",
+      "to": "N604",
+      "blocked": false,
+      "crossFloor": false
+    },
+    {
+      "id": "E631",
+      "from": "N604",
+      "to": "N562",
+      "blocked": false,
+      "crossFloor": true
     }
   ],
   "zones": [
-    
+    {
+      "id": "Z001",
+      "floor": "floor_4F",
+      "points": [
+        {
+          "x": 469,
+          "y": 345
+        },
+        {
+          "x": 486,
+          "y": 346
+        },
+        {
+          "x": 486,
+          "y": 372
+        },
+        {
+          "x": 468,
+          "y": 370
+        },
+        {
+          "x": 466,
+          "y": 347
+        }
+      ],
+      "label": "Z001"
+    },
+    {
+      "id": "Z002",
+      "floor": "floor_3F",
+      "points": [
+        {
+          "x": 504,
+          "y": 375
+        },
+        {
+          "x": 507,
+          "y": 303
+        },
+        {
+          "x": 485,
+          "y": 298
+        },
+        {
+          "x": 487,
+          "y": 374
+        },
+        {
+          "x": 505,
+          "y": 375
+        }
+      ],
+      "label": "Z002"
+    },
+    {
+      "id": "Z003",
+      "floor": "floor_1F",
+      "points": [
+        {
+          "x": 196,
+          "y": 377
+        },
+        {
+          "x": 198,
+          "y": 443
+        },
+        {
+          "x": 32,
+          "y": 443
+        },
+        {
+          "x": 32,
+          "y": 381
+        },
+        {
+          "x": 196,
+          "y": 378
+        }
+      ],
+      "label": "Z003"
+    },
+    {
+      "id": "Z004",
+      "floor": "floor_1F",
+      "points": [
+        {
+          "x": 292,
+          "y": 377
+        },
+        {
+          "x": 292,
+          "y": 444
+        },
+        {
+          "x": 498,
+          "y": 446
+        },
+        {
+          "x": 499,
+          "y": 381
+        },
+        {
+          "x": 292,
+          "y": 376
+        }
+      ],
+      "label": "Z004"
+    },
+    {
+      "id": "Z005",
+      "floor": "floor_2F",
+      "points": [
+        {
+          "x": 51,
+          "y": 392
+        },
+        {
+          "x": 51,
+          "y": 455
+        },
+        {
+          "x": 255,
+          "y": 456
+        },
+        {
+          "x": 253,
+          "y": 415
+        },
+        {
+          "x": 212,
+          "y": 414
+        },
+        {
+          "x": 209,
+          "y": 389
+        },
+        {
+          "x": 54,
+          "y": 393
+        }
+      ],
+      "label": "Z005"
+    }
   ],
   "floorOrder": [
     "floor_1F",

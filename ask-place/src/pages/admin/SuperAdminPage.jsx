@@ -30,6 +30,12 @@ export default function SuperAdminPage({ user, onLogout }) {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [statusMsg, setStatusMsg] = useState({ text: "", isError: false });
 
+  useEffect(() => {
+    if (statusMsg.text && !statusMsg.text.includes("中...")) {
+      window.alert(statusMsg.text);
+    }
+  }, [statusMsg]);
+
   // 検索・フィルタ状態
   const [filterFloor, setFilterFloor] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -419,16 +425,6 @@ export default function SuperAdminPage({ user, onLogout }) {
           </button>
         </form>
       </section>
-
-      {statusMsg.text && (
-        <div
-          className={`admin-status-message ${statusMsg.isError ? "error" : "success"}`}
-          role="alert"
-          aria-live="assertive"
-        >
-          {statusMsg.text}
-        </div>
-      )}
 
       <div className="super-admin-layout">
         {/* 左カラム: 全部屋リスト */}
