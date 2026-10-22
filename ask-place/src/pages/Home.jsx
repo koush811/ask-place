@@ -140,6 +140,8 @@ export default function Home() {
       <RoomInfoModal room={selectedRoom} onClose={() => setSelectedRoom(null)} />
       
       {toast && <div className="toast">{toast}</div>}
+
+      
     </>
   )
 }

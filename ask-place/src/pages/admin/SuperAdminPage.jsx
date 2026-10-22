@@ -8,8 +8,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { uploadRoomImage, deleteRoomImage } from "../../lib/imageUpload";
-import { ROOM_STATUS_LABEL } from "../../lib/roomStatus";
-import StatusBadge from "../../components/StatusBadge";
 import { useSiteSettings } from "../../context/SiteSettingsContext";
 import { useNotification } from "../../context/NotificationContext";
 
@@ -43,7 +41,6 @@ export default function SuperAdminPage({ user, onLogout }) {
   // 編集フォーム状態
   const [editTitle, setEditTitle] = useState("");
   const [editDesc, setEditDesc] = useState("");
-  const [editStatus, setEditStatus] = useState("empty");
   const [editFloor, setEditFloor] = useState(1);
   const [editEnabled, setEditEnabled] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
@@ -111,7 +108,6 @@ export default function SuperAdminPage({ user, onLogout }) {
     setSelectedRoomId(room.id);
     setEditTitle(room.title || "");
     setEditDesc(room.description || "");
-    setEditStatus(room.status || "empty");
     setEditFloor(room.floor || 1);
     setEditEnabled(room.enabled ?? false);
     setCurrentImageUrl(room.imageUrl || null);
@@ -234,7 +230,6 @@ export default function SuperAdminPage({ user, onLogout }) {
       await updateDoc(roomRef, {
         title: editTitle.trim(),
         description: editDesc.trim(),
-        status: editStatus,
         floor: Number(editFloor),
         enabled: editEnabled,
         imageUrl: finalImageUrl,
@@ -249,7 +244,6 @@ export default function SuperAdminPage({ user, onLogout }) {
                 ...r,
                 title: editTitle.trim(),
                 description: editDesc.trim(),
-                status: editStatus,
                 floor: Number(editFloor),
                 enabled: editEnabled,
                 imageUrl: finalImageUrl,
@@ -472,7 +466,6 @@ export default function SuperAdminPage({ user, onLogout }) {
                     </span>
                   </div>
                   <div className="row-right">
-                    <StatusBadge status={r.status || "empty"} size="sm" />
                     <button
                       type="button"
                       className={`toggle-enabled-btn ${r.enabled ? "enabled" : "disabled"}`}
@@ -519,19 +512,6 @@ export default function SuperAdminPage({ user, onLogout }) {
                   />
                 </div>
 
-                <div className="form-field">
-                  <label htmlFor="sa-status">混雑状況</label>
-                  <select
-                    id="sa-status"
-                    className="admin-select"
-                    value={editStatus}
-                    onChange={(e) => setEditStatus(e.target.value)}
-                  >
-                    <option value="empty">🟢 {ROOM_STATUS_LABEL.empty}</option>
-                    <option value="somewhat_crowded">🟡 {ROOM_STATUS_LABEL.somewhat_crowded}</option>
-                    <option value="crowded">🔴 {ROOM_STATUS_LABEL.crowded}</option>
-                  </select>
-                </div>
               </div>
 
               <div className="form-field">
@@ -606,7 +586,7 @@ export default function SuperAdminPage({ user, onLogout }) {
             </form>
           ) : (
             <div className="no-selection-hint">
-              <p>👈 左の一覧から編集したい部屋を選択してください</p>
+              <p>一覧から編集したい部屋を選択してください</p>
             </div>
           )}
         </section>

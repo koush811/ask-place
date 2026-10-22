@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import StatusBadge from "./StatusBadge";
 
 /**
  * 展示カードコンポーネント (画像なし・通信量削減)
@@ -26,8 +25,10 @@ export default function RoomCard({ room }) {
       }}
     >
       <div className="room-card-header">
-        <span className="room-card-number">{room.roomName || room.id}</span>
-        <span className="room-card-floor">{room.floor}F</span>
+        <span className={`room-card-number floor-${room.floor || 0}`}>
+          {room.roomName || room.id}
+        </span>
+        <span className={`room-card-floor floor-${room.floor}`}>{room.floor}F</span>
       </div>
 
       <h3 className="room-card-title">{room.title || "展示名未設定"}</h3>
@@ -37,7 +38,6 @@ export default function RoomCard({ room }) {
       )}
 
       <div className="room-card-footer">
-        <StatusBadge status={room.status} size="sm" />
         <span className="room-card-arrow">詳細 →</span>
       </div>
     </div>

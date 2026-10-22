@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { matchesSearchText } from '../utils/search.js'
 
-export default function SearchForm({ points, floorLabels, onSelectRoom, onForceRoom, }) {
+export default function SearchForm({ points, rooms = [], onSelectRoom, onForceRoom, }) {
   const [query, setQuery] = useState('')
 
   const searchable = useMemo(
@@ -56,7 +56,7 @@ export default function SearchForm({ points, floorLabels, onSelectRoom, onForceR
             </option>
             {results.map((r) => (
               <option key={r.id} value={r.id}>
-                {r.name}（{floorLabels[r.floor]}）
+                {r.name}（{rooms.find((room) => room.id === r.id || room.id === r.name || room.roomName === r.id || room.roomName === r.name)?.title || '展示なし'}）
               </option>
             ))}
           </select>

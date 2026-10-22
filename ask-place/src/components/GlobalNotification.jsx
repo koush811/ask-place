@@ -10,7 +10,7 @@ export default function GlobalNotification() {
         <div className="search-label">文化祭へようこそ</div>
         <label>
           スローガン
-          <h2 style={{margin:"5px 0px"}}>愛総愛添う</h2>
+          <h2 style={{margin:"5px 0px"}}>愛総高 愛添い中</h2>
         </label>
         <label>
           期間

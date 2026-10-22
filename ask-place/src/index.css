@@ -488,6 +488,12 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* ---------- Floor selector ---------- */
+.floor-floor_1F, .floor-1 { --floor-color: #2563eb; --floor-bg: #eff6ff; }
+.floor-floor_2F, .floor-2 { --floor-color: #059669; --floor-bg: #ecfdf5; }
+.floor-floor_3F, .floor-3 { --floor-color: #d97706; --floor-bg: #fffbeb; }
+.floor-floor_4F, .floor-4 { --floor-color: #7c3aed; --floor-bg: #f5f3ff; }
+.floor-floor_5F, .floor-5 { --floor-color: #e11d48; --floor-bg: #fff1f2; }
+
 .floor-selector {
   display: flex;
   gap: 6px;
@@ -505,23 +511,21 @@ input, select, textarea { font-family: inherit; }
   padding: 10px 0;
   font-weight: 700;
   font-size: 14px;
-  border: 1.5px solid #cccccc;
+  border: 1.5px solid , #cccccc;
   background: #ffffff;
-  color: #000000;
+  color:  #000000;
   border-radius: 8px;
   cursor: pointer;
   transition: all .12s;
 }
 
 .floor-btn.active {
-  background: #000000;
-  border-color: #000000;
-  color: #ffffff;
+  border:solid 3px var(--floor-color, #000000);
+  color: #000;
 }
 
 .floor-btn:hover:not(.active) {
-  background: #f5f5f5;
-  border-color: #888888;
+  filter: brightness(0.96);
 }
 
 .floor-btn:active { transform: scale(0.96); }
@@ -1081,11 +1085,13 @@ input, select, textarea { font-family: inherit; }
   margin-bottom: 12px;
 }
 
-.control-group {
+.sort-control,
+.floor-filter-control {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  width: 200px;
 }
 
 .control-label {
@@ -1093,35 +1099,6 @@ input, select, textarea { font-family: inherit; }
   font-weight: 700;
   color: #000000;
   min-width: 60px;
-}
-
-.sort-buttons {
-  display: flex;
-  gap: 6px;
-  flex: 1;
-}
-
-.sort-btn {
-  flex: 1;
-  padding: 7px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  border: 1px solid #cccccc;
-  background: #ffffff;
-  color: #000000;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.15s;
-}
-
-.sort-btn:hover:not(.active) {
-  background: #f5f5f5;
-}
-
-.sort-btn.active {
-  background: #000000;
-  color: #ffffff;
-  border-color: #000000;
 }
 
 .filter-select {
@@ -1211,8 +1188,8 @@ input, select, textarea { font-family: inherit; }
 .room-card-number {
   font-size: 13px;
   font-weight: 700;
-  color: #000000;
-  background: #f5f5f5;
+  color: #FFF;
+  background: #202020;
   border: 1px solid #e0e0e0;
   padding: 2px 8px;
   border-radius: 4px;
@@ -1221,7 +1198,10 @@ input, select, textarea { font-family: inherit; }
 .room-card-floor {
   font-size: 12px;
   font-weight: 700;
-  color: #666666;
+  color: var(--floor-color, #666666);
+  background: var(--floor-bg, transparent);
+  padding: 2px 7px;
+  border-radius: 999px;
 }
 
 .room-card-title {
@@ -1325,7 +1305,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 .detail-floor-tag {
-  background: #555555;
+  background: var(--floor-color, #555555);
   color: #ffffff;
   font-size: 12px;
   font-weight: 700;

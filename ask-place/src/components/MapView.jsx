@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
-import f1 from '../map/F1.png'
-import f2 from '../map/F2.png'
-import f3 from '../map/F3.png'
-import f4 from '../map/F4.png'
-import f5 from '../map/F5.png'
+import f1 from '../data/1F-vector-combined.svg'
+import f2 from '../data/2F-vector-combined.svg'
+import f3 from '../data/3F-vector-combined.svg'
+import f4 from '../data/4F-vector-combined.svg'
+import f5 from '../data/5F-vector-combined.svg'
 
 const FLOOR_IMAGES = {
   floor_1F: f1,
@@ -13,6 +13,15 @@ const FLOOR_IMAGES = {
   floor_3F: f3,
   floor_4F: f4,
   floor_5F: f5,
+}
+
+// Map point coordinates are defined against the original floor plan dimensions.
+const FLOOR_SIZES = {
+  floor_1F: { w: 687, h: 452 },
+  floor_2F: { w: 712, h: 480 },
+  floor_3F: { w: 697, h: 457 },
+  floor_4F: { w: 699, h: 464 },
+  floor_5F: { w: 699, h: 83 },
 }
 
 export default function MapView({ points, zones = [], activeFloor, highlightedId, onSelectRoom, routePoints, forcedRoom,onClearForcedRoom,  }) {
@@ -23,16 +32,12 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
   const src = FLOOR_IMAGES[activeFloor]
 
   useEffect(() => {
-    setNaturalSize(null)
-    const img = new Image()
-    img.onload = () => {
-      setNaturalSize({ w: img.naturalWidth, h: img.naturalHeight })
-      const containerW = containerRef.current?.clientWidth || img.naturalWidth
-      const scale = Math.min(containerW / img.naturalWidth, 1.6)
-      setFitScale(scale > 0 ? scale : 1)
-    }
-    img.src = src
-  }, [src])
+    const size = FLOOR_SIZES[activeFloor]
+    setNaturalSize(size)
+    const containerW = containerRef.current?.clientWidth || size.w
+    const scale = Math.min(containerW / size.w, 1.6)
+    setFitScale(scale > 0 ? scale : 1)
+  }, [activeFloor, src])
 
   const floorPoints = points.filter(
     (p) =>
@@ -68,7 +73,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                 className="map-image-layer"
                 style={{ width: naturalSize.w, height: naturalSize.h }}
               >
-                <img src={src} alt={`${activeFloor} フロアマップ`} draggable={false} />
+                <img src={src} alt={`${activeFloor} フロアマップ`} width={naturalSize.w} height={naturalSize.h} draggable={false} />
                 {floorZones.length > 0 && (
                   <svg
                     className="zone-overlay"

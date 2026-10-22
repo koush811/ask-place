@@ -2,14 +2,13 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useRooms } from "../context/RoomsContext";
 import RoomList from "../components/RoomList";
-import { ROOM_STATUS_ORDER } from "../lib/roomStatus";
 
 /**
  * 展示一覧ページ (/rooms) - 仕様書 第6章
  */
 export default function RoomsListPage() {
   const { rooms, loading } = useRooms();
-  const [sortKey, setSortKey] = useState("floor"); // "floor" | "status"
+  const [sortKey, setSortKey] = useState("floor");
   const [selectedFloor, setSelectedFloor] = useState("all");
   const [searchWord, setSearchWord] = useState("");
 
@@ -38,12 +37,6 @@ export default function RoomsListPage() {
     // ソート処理 (仕様書 第6.2章)
     if (sortKey === "floor") {
       result.sort((a, b) => (a.floor || 0) - (b.floor || 0));
-    } else if (sortKey === "status") {
-      result.sort(
-        (a, b) =>
-          (ROOM_STATUS_ORDER[a.status] ?? 0) -
-          (ROOM_STATUS_ORDER[b.status] ?? 0)
-      );
     }
 
     return result;
@@ -57,34 +50,15 @@ export default function RoomsListPage() {
         </div>
         <h1 className="page-title">展示・企画一覧</h1>
         <p className="page-subtitle">
-          各教室の展示内容とリアルタイムな混雑状況を確認できます。
+          各教室の展示内容を確認できます。
         </p>
       </div>
 
       <div className="rooms-controls">
-        {/* ソート切り替え */}
-        <div className="control-group">
-          <label className="control-label">並び替え:</label>
-          <div className="sort-buttons">
-            <button
-              type="button"
-              className={`sort-btn ${sortKey === "floor" ? "active" : ""}`}
-              onClick={() => setSortKey("floor")}
-            >
-              階数順 (1F〜5F)
-            </button>
-            <button
-              type="button"
-              className={`sort-btn ${sortKey === "status" ? "active" : ""}`}
-              onClick={() => setSortKey("status")}
-            >
-              空いている順
-            </button>
-          </div>
-        </div>
+        
 
         {/* 階数フィルタ */}
-        <div className="control-group">
+        <div className="floor-filter-control">
           <label className="control-label" htmlFor="floor-filter">フロア:</label>
           <select
             id="floor-filter"
@@ -102,7 +76,7 @@ export default function RoomsListPage() {
         </div>
 
         {/* 検索入力 */}
-        <div className="control-group search-group">
+        <div className="search-group">
           <input
             type="text"
             className="search-input"

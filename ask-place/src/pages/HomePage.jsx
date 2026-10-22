@@ -262,7 +262,7 @@ export default function HomePage() {
       {/* 教室検索（全教室ノードから検索可能） */}
       <SearchForm
         points={nodes}
-        floorLabels={floorLabels}
+        rooms={rooms}
         onSelectRoom={handleSelectRoomFromSearch}
         onForceRoom={setForcedRoom}
       />
@@ -270,6 +270,7 @@ export default function HomePage() {
       {/* 経路検索 */}
       <RouteFinder
         mapData={mapData}
+        rooms={rooms}
         onRouteComputed={handleRouteComputed}
         onClear={handleClearRoute}
       />
@@ -286,7 +287,7 @@ export default function HomePage() {
       {/* 校内マップ */}
       <section className="map-section">
         <div className="map-instruction-hint">
-          教室ピンをタップすると展示の詳細・現在の混雑状況を確認できます
+          教室ピンをタップすると展示の詳細を確認できます
         </div>
 
         <MapView
@@ -332,6 +333,8 @@ export default function HomePage() {
         onClose={() => setSelectedRoom(null)}
         onShowMap={handleShowSelectedRoomOnMap}
       />
+
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd08zoipRqmCffJQcSrC5FkNrLBvcaYUJx0k2CN_6f_WyvjKg/viewform?usp=dialog">MTE祭 企画人気投票</a>
     </main>
   );
 }

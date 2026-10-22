@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db, getAppCheckToken } from "../../lib/firebase";
-import { uploadRoomImage } from "../../lib/imageUpload";
-import { ROOM_STATUS_LABEL } from "../../lib/roomStatus";
+import { deleteRoomImage, uploadRoomImage } from "../../lib/imageUpload";
 
 /**
  * クラス管理者画面 (/admin - class_admin ログイン後) - 仕様書 第8.2章
@@ -27,10 +26,10 @@ export default function ClassAdminPage({ user, onLogout }) {
   // 編集フォーム状態
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("empty");
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
 
   // 担当教室データの取得 (仕様書: 自分のroomIdのみ)
   useEffect(() => {
@@ -49,7 +48,6 @@ export default function ClassAdminPage({ user, onLogout }) {
           if (isMounted) {
             setTitle(data.title || "");
             setDescription(data.description || "");
-            setStatus(data.status || "empty");
             setCurrentImageUrl(data.imageUrl || null);
           }
         }
@@ -72,9 +70,44 @@ export default function ClassAdminPage({ user, onLogout }) {
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
       setSelectedFile(file);
       const objUrl = URL.createObjectURL(file);
       setPreviewUrl(objUrl);
+    }
+  };
+
+  const handleCancelSelectedPhoto = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleDeletePhoto = async () => {
+    if (!roomId || !currentImageUrl) return;
+    if (!window.confirm("この展示の写真を削除してよろしいですか？")) return;
+
+    setSaving(true);
+    setStatusMsg({ text: "写真を削除中...", isError: false });
+    try {
+      await deleteRoomImage(currentImageUrl);
+      await updateDoc(doc(db, "rooms", roomId), {
+        imageUrl: null,
+        updatedAt: serverTimestamp(),
+      });
+      setCurrentImageUrl(null);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      setStatusMsg({ text: "写真を削除しました。", isError: false });
+    } catch (err) {
+      console.error("[ClassAdmin] 写真削除失敗:", err);
+      setStatusMsg({
+        text: `写真の削除に失敗しました（${err?.code || "unknown"}）。`,
+        isError: true,
+      });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -104,14 +137,15 @@ export default function ClassAdminPage({ user, onLogout }) {
       await updateDoc(roomRef, {
         title: title.trim(),
         description: description.trim(),
-        status: status,
         imageUrl: finalImageUrl,
         updatedAt: serverTimestamp(),
       });
 
       setCurrentImageUrl(finalImageUrl);
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
       setSelectedFile(null);
       setPreviewUrl(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setStatusMsg({ text: "✨ 正常に保存されました！", isError: false });
     } catch (err) {
       console.error("[ClassAdmin] 更新失敗:", err);
@@ -172,25 +206,6 @@ export default function ClassAdminPage({ user, onLogout }) {
           />
         </div>
 
-        {/* 混雑状況 (3択セレクトボックス) */}
-        <div className="form-field">
-          <label htmlFor="room-status">現在の混雑状況 <span className="req">*</span></label>
-          <select
-            id="room-status"
-            className="admin-select"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            disabled={saving}
-          >
-            <option value="empty">🟢 {ROOM_STATUS_LABEL.empty} (すぐに入場できます)</option>
-            <option value="somewhat_crowded">🟡 {ROOM_STATUS_LABEL.somewhat_crowded} (少し待つ可能性があります)</option>
-            <option value="crowded">🔴 {ROOM_STATUS_LABEL.crowded} (現在混み合っています)</option>
-          </select>
-          <span className="input-hint">
-            ※混雑状況をこまめに更新することで、来場者の混雑緩和につながります
-          </span>
-        </div>
-
         {/* 展示説明 */}
         <div className="form-field">
           <label htmlFor="room-desc">展示説明文</label>
@@ -215,11 +230,27 @@ export default function ClassAdminPage({ user, onLogout }) {
               <div className="photo-preview-wrap">
                 <img src={previewUrl} alt="プレビュー" className="photo-preview" />
                 <span className="photo-preview-tag">新しく選択された画像</span>
+                <button
+                  type="button"
+                  className="delete-photo-btn"
+                  onClick={handleCancelSelectedPhoto}
+                  disabled={saving}
+                >
+                  選択を取り消す
+                </button>
               </div>
             ) : currentImageUrl ? (
               <div className="photo-preview-wrap">
                 <img src={currentImageUrl} alt="現在の展示写真" className="photo-preview" />
                 <span className="photo-preview-tag">現在公開中の画像</span>
+                <button
+                  type="button"
+                  className="delete-photo-btn"
+                  onClick={handleDeletePhoto}
+                  disabled={saving}
+                >
+                  🗑️ 写真を削除
+                </button>
               </div>
             ) : (
               <div className="photo-placeholder">写真はまだ登録されていません</div>
@@ -233,6 +264,7 @@ export default function ClassAdminPage({ user, onLogout }) {
             className="admin-file-input"
             onChange={handleFileChange}
             disabled={saving}
+            ref={fileInputRef}
           />
           <span className="input-hint">
             ※ アップロード時に自動で軽量化 (WebP形式 / 1MB以下) に圧縮されます

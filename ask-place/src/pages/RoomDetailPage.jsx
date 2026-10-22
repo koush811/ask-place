@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useRooms } from "../context/RoomsContext";
-import StatusBadge from "../components/StatusBadge";
 import { isTrustedStorageUrl } from "../lib/firebase";
 
 /**
@@ -79,8 +78,7 @@ export default function RoomDetailPage() {
         {/* ヘッダー情報 */}
         <header className="detail-header">
           <div className="detail-badge-wrap">
-            <span className="detail-floor-tag">{room.floor}階</span>
-            <StatusBadge status={room.status} size="lg" />
+            <span className={`detail-floor-tag floor-${room.floor}`}>{room.floor}階</span>
           </div>
           <h1 className="detail-title">{room.title || "展示準備中"}</h1>
           <div className="detail-room-name">

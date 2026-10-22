@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react'
 import { findRoute } from '../utils/routing.js'
 import { matchesSearchText } from '../utils/search.js'
 
-export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
-  const { nodes, floorLabels } = mapData
+export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onClear }) {
+  const { nodes } = mapData
 
   const [startQuery, setStartQuery] = useState('')
   const [startId, setStartId] = useState('')
@@ -38,6 +38,15 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
 
   const showStartEmpty = startQuery.trim().length > 0 && !startId && startResults.length === 0
   const showEndEmpty = endQuery.trim().length > 0 && !endId && endResults.length === 0
+
+  const getOptionLabel = (point) => {
+    if (point.type !== 'room') return point.name
+    const room = rooms.find((item) =>
+      item.id === point.id || item.id === point.name ||
+      item.roomName === point.id || item.roomName === point.name
+    )
+    return `${point.name}（${room?.title || '展示未登録'}）`
+  }
 
   const handleStartChange = (value) => {
     setStartQuery(value)
@@ -119,7 +128,7 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
               </option>
               {startResults.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.name}（{floorLabels[p.floor]}）
+                  {getOptionLabel(p)}
                 </option>
               ))}
             </select>
@@ -158,7 +167,7 @@ export default function RouteFinder({ mapData, onRouteComputed, onClear }) {
               </option>
               {endResults.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.name}（{floorLabels[p.floor]}）
+                  {getOptionLabel(p)}
                 </option>
               ))}
             </select>

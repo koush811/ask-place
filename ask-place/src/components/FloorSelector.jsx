@@ -15,7 +15,7 @@ export default function FloorSelector({ activeFloor, onChange, floorOrder, floor
           type="button"
           role="radio"
           aria-checked={activeFloor === f.key}
-          className={`floor-btn${activeFloor === f.key ? ' active' : ''}`}
+          className={`floor-btn floor-${f.key}${activeFloor === f.key ? ' active' : ''}`}
           onClick={() => onChange(f.key)}
         >
           {f.label}
