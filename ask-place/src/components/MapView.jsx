@@ -21,7 +21,11 @@ const FLOOR_SIZES = {
   floor_2F: { w: 712, h: 480 },
   floor_3F: { w: 697, h: 457 },
   floor_4F: { w: 699, h: 464 },
-  floor_5F: { w: 699, h: 83 },
+  floor_5F: { w: 699, h: 464 },
+}
+
+const FLOOR_IMAGE_HEIGHTS = {
+  floor_5F: 83,
 }
 
 export default function MapView({ points, zones = [], activeFloor, highlightedId, onSelectRoom, routePoints, forcedRoom,onClearForcedRoom,  }) {
@@ -73,7 +77,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                 className="map-image-layer"
                 style={{ width: naturalSize.w, height: naturalSize.h }}
               >
-                <img src={src} alt={`${activeFloor} フロアマップ`} width={naturalSize.w} height={naturalSize.h} draggable={false} />
+                <img src={src} alt={`${activeFloor} フロアマップ`} width={naturalSize.w} height={FLOOR_IMAGE_HEIGHTS[activeFloor] || naturalSize.h} draggable={false} />
                 {floorZones.length > 0 && (
                   <svg
                     className="zone-overlay"

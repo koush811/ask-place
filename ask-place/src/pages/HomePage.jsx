@@ -10,6 +10,7 @@ import { useRooms } from "../context/RoomsContext";
 import { useSiteSettings } from "../context/SiteSettingsContext";
 import ImageSlider from "../components/imageSlide.jsx";
 import GlobalNotification from "../components/GlobalNotification.jsx";
+import ScheduleImage from "../assets/imgs/schedule.jpg"
 
 const { nodes, zones, floorOrder, floorLabels } = mapData;
 
@@ -334,7 +335,44 @@ export default function HomePage() {
         onShowMap={handleShowSelectedRoomOnMap}
       />
 
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd08zoipRqmCffJQcSrC5FkNrLBvcaYUJx0k2CN_6f_WyvjKg/viewform?usp=dialog">MTE祭 企画人気投票</a>
+        <div className="search-label" style={{margin:"10px 18px"}} >校舎外の展示</div>
+      <div style={{margin:"10px 18px", display:"flex", gap:"20px"}}>
+          <label htmlFor="">
+            <h3>体育館</h3>
+            <img 
+              src={ScheduleImage} 
+              alt=""
+              style={{
+                display: "block",
+                width: "100%",
+                maxWidth: "300px",
+                height: "auto",
+                border: "2px solid #000",
+              }} 
+            />
+          </label>
+         <div className="places">
+           <label htmlFor="">
+            <h3>武道場</h3>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>剣道部:</span> 武士の一太刀</p>
+          </label>
+          <label htmlFor="">
+            <h3>テニスコート</h3>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>テニス部:</span> テニス体験</p>
+          </label>
+          <label htmlFor="">
+            <h3>弓道場</h3>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>弓道部:</span> 弓道体験</p>
+          </label>
+         </div>
+      </div>
+      <div className="others" style={{margin:"10px 18px"}}>
+        <div className="search-label">その他</div>
+        <label htmlFor="">
+          人気投票
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSd08zoipRqmCffJQcSrC5FkNrLBvcaYUJx0k2CN_6f_WyvjKg/viewform?usp=dialog">MTE祭 企画人気投票</a>
+        </label>
+      </div>
     </main>
   );
 }

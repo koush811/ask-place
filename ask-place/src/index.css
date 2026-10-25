@@ -1931,11 +1931,12 @@ input, select, textarea { font-family: inherit; }
 .imgSlide {
   position: relative;
   width: 100%;
-  height: 300px;
+  height: auto;
+  aspect-ratio: 1108 / 1478;
   overflow: hidden;
   background: #ffffff;
 }
-
+/*
 .imgSlide::before{
   content:  "";
   position: absolute;
@@ -1948,13 +1949,43 @@ input, select, textarea { font-family: inherit; }
   left: 60%;
   border-top: solid 60px rgba(121, 121, 121, 0.63);
 }
-
-.imgSlide h1{
+*/
+.imgSlide h1.srogan {
+  display: block;
   position: absolute;
   z-index: 101;
-  color: black;
-  top: 70%;
-  right: 5%;
+  top: 33%;
+  left: 50%;
+  right: auto;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  margin: 0;
+  padding: 12px 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.62);
+  color: #ffffff;
+  font-size: clamp(20px, 5vw, 36px);
+  line-height: 1.25;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.imgSlide div.srogan {
+  position: absolute;
+  color: #fff;
+  z-index: 101;
+  top: calc(33% + clamp(60px, 10.5vw, 76px));
+  left: 50%;
+  width: min(70%, 480px);
+  max-width: calc(100% - 32px);
+  margin: 0;
+  padding: 16px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(38, 58, 52, 0.16);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.62);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
 .imgSlideItem {
@@ -1964,7 +1995,7 @@ input, select, textarea { font-family: inherit; }
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   opacity: 0; 
   transition: opacity 1s ease-in-out; 
 }
@@ -2202,36 +2233,34 @@ input, select, textarea { font-family: inherit; }
   border-radius: 16px;
 }
 
-.srogan .search-label {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: #363636;
-  border-left-color: #3a9a7e;
-}
 
 .srogan label {
   display: block;
   min-width: 0;
-  color: #363636;
+  color: #ffffff;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
+  border-bottom: solid 1px #ffffff;
 }
 
 .srogan label h2,
 .srogan label h3 {
-  color: #363636;
+  color: #ffffff;
   font-weight: 750;
   line-height: 1.35;
   letter-spacing: 0;
+  
 }
 
 .srogan label h2 {
   font-size: clamp(18px, 4vw, 24px);
+  
 }
 
 .srogan label h3 {
   font-size: 18px;
+  
 }
 
 @media (max-width: 420px) {
@@ -2239,6 +2268,110 @@ input, select, textarea { font-family: inherit; }
     width: 100%;
     gap: 12px;
     padding: 15px 0px;
+  }
+}
+
+.home-page > div:has(> .places) {
+  display: grid !important;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.home-page > div:has(> .places) > label {
+  min-width: 0;
+}
+
+.home-page > div:has(> .places) > label h3 {
+  margin: 0 0 10px;
+  color: #263a34;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.places {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.places label {
+  display: block;
+  min-width: 0;
+  padding: 14px;
+  color: #363636;
+  background: #ffffff;
+}
+
+.places h3 {
+  margin: 0 0 8px;
+  color: #263a34;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.places p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.others {
+  padding: 16px;
+  color: #363636;
+  background: #ffffff;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
+}
+
+.others .search-label {
+  margin: 0 0 12px;
+  border-left-color: #3a9a7e;
+}
+
+.others label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.others a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 8px 14px;
+  color: #ffffff;
+  background: #26785f;
+  border-radius: 9px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.others a:hover {
+  background: #1f624e;
+}
+
+.others a:focus-visible {
+  outline: 3px solid #91d2bb;
+  outline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .home-page > div:has(> .places) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+}
+
+@media (max-width: 420px) {
+  .others {
+    padding: 14px;
   }
 }
 

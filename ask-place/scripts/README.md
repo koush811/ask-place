@@ -35,6 +35,17 @@ node scripts/createAccounts.js
 node scripts/createAccounts.js 301 302 303 304 S401 S402
 ```
 
+### 既存アカウントのパスワード再発行
+
+通常実行では既存アカウントのパスワードは変更しません。再発行が必要な場合だけ、`--rotate-existing` を明示してください。
+
+```bash
+node scripts/createAccounts.js --rotate-existing
+node scripts/createAccounts.js 301 302 --rotate-existing
+```
+
+生成されるCSVには平文パスワードが含まれます。新規作成または明示的に再発行したアカウントだけがCSVに出力されます。安全な方法で配布し、配布後は削除してください。既存CSVがある場合、誤上書きを防ぐためスクリプトは停止します。CSVを安全に移動または削除してから再実行してください。
+
 ---
 
 ## 出力ファイル

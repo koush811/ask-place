@@ -25,6 +25,14 @@ service cloud.firestore {
         && userDoc().roomId == roomId;
     }
 
+    function isValidRoomImageUrl(imageUrl) {
+      return imageUrl == null
+        || (imageUrl is string
+          && imageUrl.size() <= 2048
+          && (imageUrl.matches('^https://firebasestorage\\.googleapis\\.com/v0/b/[^/]+/o/room%2F[^?]+\\?alt=media&token=[A-Za-z0-9_-]+$')
+            || imageUrl.matches('^https://[^/]+\\.firebasestorage\\.app/v0/b/[^/]+/o/room%2F[^?]+\\?alt=media&token=[A-Za-z0-9_-]+$')));
+    }
+
     match /users/{uid} {
       // 自分自身の権限確認のみ許可。書き込みはクライアントから行わない(Admin SDK経由のみ)
       allow read: if isSignedIn()
@@ -54,7 +62,7 @@ service cloud.firestore {
           && request.resource.data.title.size() <= 200
           && request.resource.data.description.size() <= 1000
           && request.resource.data.status in ["empty", "somewhat_crowded", "crowded"]
-          && (request.resource.data.imageUrl == null || request.resource.data.imageUrl is string)
+          && isValidRoomImageUrl(request.resource.data.imageUrl)
         ));
 
       // 作成・削除はクライアントから行わない(事前にAdmin SDK等で全部屋分を作成しておく運用)

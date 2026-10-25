@@ -44,7 +44,7 @@ const db = getFirestore(app);
  * @returns {string}
  */
 function generatePassword() {
-  return randomBytes(6).toString("base64url");
+  return randomBytes(16).toString("base64url");
 }
 
 /**
@@ -62,6 +62,10 @@ function extractFloor(roomId) {
  * @param {string[]} roomIds
  */
 async function createClassAdminAccounts(roomIds) {
+  if (fs.existsSync(OUTPUT_CSV_PATH)) {
+    throw new Error(`Credential file already exists; move or securely delete it before running again: ${OUTPUT_CSV_PATH}`);
+  }
+
   console.log(`アカウント作成を開始します (対象: ${roomIds.length} 部屋)...`);
   const results = [];
 
@@ -70,7 +74,7 @@ async function createClassAdminAccounts(roomIds) {
     const roomId = typeof item === "string" ? item : item.roomId;
     const floor = typeof item === "object" && item.floor ? item.floor : extractFloor(roomId);
     const email = `${roomId}@${DUMMY_EMAIL_DOMAIN}`;
-    const password = generatePassword();
+    let password = generatePassword();
 
     try {
       // 1. Firebase Auth ユーザー作成 (既存ユーザーチェック)
@@ -79,13 +83,17 @@ async function createClassAdminAccounts(roomIds) {
         const existingUser = await auth.getUserByEmail(email);
         uid = existingUser.uid;
         // パスワードを更新
-        await auth.updateUser(uid, { password });
-        console.log(`[${i + 1}/${roomIds.length}] 既存ユーザーのパスワードを更新: ${roomId} (${email})`);
+        if (rotateExistingPasswords) {
+          await auth.updateUser(uid, { password });
+        } else {
+          password = null;
+        }
+        console.log(`[${i + 1}/${roomIds.length}] Existing account ${rotateExistingPasswords ? "password rotated" : "kept unchanged"}: ${roomId} (${email})`);
       } catch (err) {
         if (err.code === "auth/user-not-found") {
           const userRecord = await auth.createUser({ email, password });
           uid = userRecord.uid;
-          console.log(`[${i + 1}/${roomIds.length}] 新規ユーザー作成: ${roomId} (${email})`);
+          console.log(`[${i + 1}/${roomIds.length}] New user created: ${roomId} (${email})`);
         } else {
           throw err;
         }
@@ -114,7 +122,7 @@ async function createClassAdminAccounts(roomIds) {
         await roomDocRef.set({ floor }, { merge: true });
       }
 
-      results.push({ roomId, email, password });
+      if (password) results.push({ roomId, email, password });
     } catch (err) {
       console.error(`[${roomId}] の作成に失敗しました:`, err);
     }
@@ -126,9 +134,12 @@ async function createClassAdminAccounts(roomIds) {
     ...results.map((r) => `"${r.roomId}","${r.email}","${r.password}"`),
   ].join("\n");
 
-  fs.writeFileSync(OUTPUT_CSV_PATH, csvContent, "utf-8");
-  console.log(`\n完了: ${results.length} 件のアカウントを作成/更新しました。`);
-  console.log(`パスワード一覧を保存しました: ${OUTPUT_CSV_PATH}`);
+  if (results.length > 0) {
+    fs.writeFileSync(OUTPUT_CSV_PATH, csvContent, { encoding: "utf-8", flag: "wx", mode: 0o600 });
+    console.log(`Credentials saved to: ${OUTPUT_CSV_PATH}`);
+    console.warn("This CSV contains plaintext passwords. Transfer it securely and delete it after delivery.");
+  }
+  console.log(`Processed ${roomIds.length} rooms; generated credentials for ${results.length} accounts.`);
 }
 
 /**
@@ -156,9 +167,13 @@ function loadRoomsFromMapData() {
 }
 
 // コマンドライン引数で個別指定があればそれを使用、無ければ campus_map_data.json の部屋一覧を使用
+const commandArgs = process.argv.slice(2);
+const rotateExistingPasswords = commandArgs.includes("--rotate-existing");
+const roomArgs = commandArgs.filter((arg) => arg !== "--rotate-existing");
+
 let targetRooms = [];
-if (process.argv.slice(2).length > 0) {
-  targetRooms = process.argv.slice(2).map((id) => ({
+if (roomArgs.length > 0) {
+  targetRooms = roomArgs.map((id) => ({
     roomId: id,
     floor: extractFloor(id),
   }));

@@ -77,7 +77,7 @@ export default function Home() {
         <h1 className='title'>Welcome to ASK!</h1>
       </div>
       <section className="hero">
-        <h2 className="hero-title">ようこそ、学校説明会へ</h2>
+        <h2 className="hero-title">ようこそ、文化祭へ</h2>
         <p className="hero-sub">
           校内マップで教室の場所を確認できます。教室を検索するか、マップ上のピンをタップしてください。
         </p>
