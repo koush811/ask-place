@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { db, getAppCheckToken } from "../../lib/firebase";
+import { db } from "../../lib/firebase";
 import { deleteRoomImage, uploadRoomImage } from "../../lib/imageUpload";
 
 /**
@@ -120,9 +120,6 @@ export default function ClassAdminPage({ user, onLogout }) {
     setStatusMsg({ text: "", isError: false });
 
     try {
-      // Firestore rules require a valid App Check token for class_admin updates.
-      await getAppCheckToken();
-
       let finalImageUrl = currentImageUrl;
 
       // 1. 新しい写真がある場合、先に圧縮・アップロードを行う

@@ -3,7 +3,6 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import {
-  getToken,
   initializeAppCheck,
   ReCaptchaEnterpriseProvider,
 } from "firebase/app-check";
@@ -58,17 +57,6 @@ if (typeof window !== "undefined") {
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-
-export async function getAppCheckToken() {
-  if (!appCheck) {
-    throw new Error("Firebase App Checkが初期化されていません。");
-  }
-  const result = await getToken(appCheck, true);
-  if (!result.token) {
-    throw new Error("Firebase App Checkトークンを取得できませんでした。");
-  }
-  return result.token;
-}
 
 export function isTrustedStorageUrl(value) {
   if (typeof value !== "string") return false;

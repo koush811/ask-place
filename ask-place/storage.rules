@@ -23,11 +23,11 @@ service firebase.storage {
       allow read: if true;
 
       // 作成・更新:自分の部屋のみ(class_admin)、または全部屋(super_admin)
-      // ファイルサイズ2MB以下・WebP/JPEGのみ許可。アプリが生成するファイル名以外は拒否する。
+      // ファイルサイズ1MB以下・WebP/JPEGのみ許可。アプリが生成するファイル名以外は拒否する。
       allow create, update: if isSignedIn()
         && (userRole() == "super_admin" || userRoomId() == roomId)
         && fileName.matches('^[A-Za-z0-9-]+\\.(webp|jpeg)$')
-        && request.resource.size <= 2 * 1024 * 1024
+        && request.resource.size <= 1 * 1024 * 1024
         && request.resource.contentType.matches('image/(webp|jpeg)');
 
       // 削除:作成・更新と異なり、削除リクエストにはrequest.resourceがない

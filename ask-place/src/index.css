@@ -1957,8 +1957,8 @@ input, select, textarea { font-family: inherit; }
   top: 33%;
   left: 50%;
   right: auto;
-  width: max-content;
-  max-width: calc(100% - 32px);
+  width: min(90%, 450px);
+  max-width: calc(100% - 20px);
   margin: 0;
   padding: 12px 20px;
   transform: translate(-50%, -50%);
@@ -1977,7 +1977,7 @@ input, select, textarea { font-family: inherit; }
   z-index: 101;
   top: calc(33% + clamp(60px, 10.5vw, 76px));
   left: 50%;
-  width: min(70%, 480px);
+  width: min(90%, 500px);
   max-width: calc(100% - 32px);
   margin: 0;
   padding: 16px;
@@ -2229,7 +2229,7 @@ input, select, textarea { font-family: inherit; }
   padding: 18px 0px;
   color: #363636;
   background: #FFF;
-  width: 70%;
+  width: 100%;
   border-radius: 16px;
 }
 
@@ -2263,7 +2263,7 @@ input, select, textarea { font-family: inherit; }
   
 }
 
-@media (max-width: 420px) {
+@media (max-width: 500px) {
   .srogan {
     width: 100%;
     gap: 12px;

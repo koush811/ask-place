@@ -107,7 +107,7 @@ export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onCl
             className="search-input"
             type="text"
             inputMode="search"
-            placeholder="例：入口"
+            placeholder="例：入り口"
             value={startQuery}
             onChange={(e) => handleStartChange(e.target.value)}
           />
