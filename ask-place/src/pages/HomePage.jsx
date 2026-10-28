@@ -45,7 +45,6 @@ export default function HomePage() {
     visibleRouteSegments.length > 0
       ? visibleRouteSegments.map((seg) => seg.floor)
       : null;
-
   // 公開中 (enabled == true) の部屋識別子セット
   const publishedRoomIds = useMemo(() => {
     const set = new Set();
@@ -63,6 +62,8 @@ export default function HomePage() {
   const visiblePoints = useMemo(() => {
     return nodes.filter((p) => {
       if (p.type !== "room") return true;
+      const isPublished = publishedRoomIds.has(p.name) || publishedRoomIds.has(p.id);
+      if (routeSegments.length > 0 && !isPublished) return false;
       if (
         extraVisibleNodeIds.has(p.id) ||
         extraVisibleNodeIds.has(p.name) ||
@@ -71,9 +72,9 @@ export default function HomePage() {
       ) {
         return true;
       }
-      return publishedRoomIds.has(p.name) || publishedRoomIds.has(p.id);
+      return isPublished;
     });
-  }, [publishedRoomIds, extraVisibleNodeIds, routeEndpointIds]);
+  }, [publishedRoomIds, extraVisibleNodeIds, routeEndpointIds, routeSegments.length]);
 
   // 詳細画面（校内マップで場所を確認ボタン）からの遷移処理
   const targetRoomParam = searchParams.get("room") || location.state?.targetRoomId;
@@ -210,7 +211,9 @@ export default function HomePage() {
   };
 
   const routePointsForActiveFloor =
-    visibleRouteSegments.find((seg) => seg.floor === activeFloor)?.points ?? null;
+    visibleRouteSegments
+      .find((seg) => seg.floor === activeFloor)
+      ?.points.filter((point) => point.floor === activeFloor) ?? null;
 
   // サイト非公開（準備中）時の表示
   if (!isPublished) {

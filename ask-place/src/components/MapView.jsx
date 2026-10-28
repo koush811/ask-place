@@ -15,17 +15,13 @@ const FLOOR_IMAGES = {
   floor_5F: f5,
 }
 
-// Map point coordinates are defined against the original floor plan dimensions.
+// Map points use each floor SVG's viewBox coordinate system.
 const FLOOR_SIZES = {
-  floor_1F: { w: 687, h: 452 },
-  floor_2F: { w: 712, h: 480 },
-  floor_3F: { w: 697, h: 457 },
-  floor_4F: { w: 699, h: 464 },
-  floor_5F: { w: 699, h: 464 },
-}
-
-const FLOOR_IMAGE_HEIGHTS = {
-  floor_5F: 83,
+  floor_1F: { w: 1957, h: 1264 },
+  floor_2F: { w: 1968, h: 1296 },
+  floor_3F: { w: 1976, h: 1290 },
+  floor_4F: { w: 1973, h: 1290 },
+  floor_5F: { w: 1968, h: 221 },
 }
 
 export default function MapView({ points, zones = [], activeFloor, highlightedId, onSelectRoom, routePoints, forcedRoom,onClearForcedRoom,  }) {
@@ -49,6 +45,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
       p.type !== 'branch',
   );
   const floorZones = zones.filter((z) => z.floor === activeFloor)
+  const floorRoutePoints = (routePoints || []).filter((point) => point.floor === activeFloor)
 
   const frameStyle = naturalSize
     ? { aspectRatio: `${naturalSize.w} / ${naturalSize.h}` }
@@ -59,7 +56,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
       <div className="map-canvas-wrap">
         {naturalSize && (
           <TransformWrapper
-            key={activeFloor}
+            key={`${activeFloor}-${naturalSize.w}-${naturalSize.h}-${fitScale}`}
             initialScale={fitScale}
             minScale={fitScale}
             maxScale={fitScale * 4}
@@ -77,7 +74,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                 className="map-image-layer"
                 style={{ width: naturalSize.w, height: naturalSize.h }}
               >
-                <img src={src} alt={`${activeFloor} フロアマップ`} width={naturalSize.w} height={FLOOR_IMAGE_HEIGHTS[activeFloor] || naturalSize.h} draggable={false} />
+                <img src={src} alt={`${activeFloor} フロアマップ`} width={naturalSize.w} height={naturalSize.h} draggable={false} />
                 {floorZones.length > 0 && (
                   <svg
                     className="zone-overlay"
@@ -105,7 +102,7 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                     ))}
                   </svg>
                 )}
-                {routePoints && routePoints.length > 1 && (
+                {floorRoutePoints.length > 1 && (
                   <svg
                     className="route-overlay"
                     width={naturalSize.w}
@@ -113,10 +110,10 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
                     viewBox={`0 0 ${naturalSize.w} ${naturalSize.h}`}
                   >
                     <polyline
-                      points={routePoints.map((p) => `${p.x},${p.y}`).join(' ')}
+                      points={floorRoutePoints.map((p) => `${p.x},${p.y}`).join(' ')}
                       className="route-line"
                     />
-                    {routePoints.map((p, i) => (
+                    {floorRoutePoints.map((p, i) => (
                       <circle
                         key={p.nodeId}
                         cx={p.x}
@@ -171,6 +168,8 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
 
 export function MapLegend() {
   const otherLabels = {
+    room: '部屋',
+    exhibit: '展示',
     entrance: '入口',
     stairs: '階段 / EV',
     toilet: 'トイレ',
@@ -179,7 +178,7 @@ export function MapLegend() {
     <div className="map-legend">
       {Object.entries(otherLabels).map(([t, label]) => (
         <span key={t}>
-          <i className={`map-pin type-${t}`} style={{ position: 'static', transform: 'none' }} />
+          <i className={`map-pin type-${t}`} style={{ position: 'static', transform: 'none', width: '20px', height:'20px' }} />
           {label}
         </span>
       ))}

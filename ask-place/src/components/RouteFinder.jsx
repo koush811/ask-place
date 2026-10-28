@@ -12,16 +12,20 @@ export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onCl
   const [error, setError] = useState('')
 
   const options = useMemo(
-    () =>
-      nodes
+    () => {
+      const publishedRoomIds = new Set(
+        rooms.flatMap((room) => [room.id, room.roomName]).filter(Boolean),
+      )
+      return nodes
         .filter(
           (p) =>
             p.type === 'entrance' ||
-            p.type === 'room',
+            (p.type === 'room' && (publishedRoomIds.has(p.id) || publishedRoomIds.has(p.name))),
         )
         .slice()
-        .sort((a, b) => a.name.localeCompare(b.name, 'ja')),
-    [nodes],
+        .sort((a, b) => a.name.localeCompare(b.name, 'ja'))
+    },
+    [nodes, rooms],
   )
 
   const startResults = useMemo(() => {
@@ -72,6 +76,11 @@ export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onCl
     setError('')
     if (!startId || !endId) {
       setError('出発地と目的地を選択してください')
+      return
+    }
+    if (!options.some((point) => point.id === startId) || !options.some((point) => point.id === endId)) {
+      setError('選択した部屋は現在公開されていないため、経路を検索できません。')
+      onClear()
       return
     }
     if (startId === endId) {

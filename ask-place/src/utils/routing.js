@@ -331,7 +331,7 @@ function routeToFloorSegments(nodes, path) {
     const n = nodes.find((nn) => nn.id === nodeId)
     if (!n) return
     const last = segments[segments.length - 1]
-    const point = { x: n.x, y: n.y, nodeId: n.id, name: n.name, type: n.type }
+    const point = { x: n.x, y: n.y, nodeId: n.id, name: n.name, type: n.type, floor: n.floor }
     if (last && last.floor === n.floor) {
       last.points.push(point)
     } else {

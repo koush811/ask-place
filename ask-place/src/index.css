@@ -586,38 +586,25 @@ input, select, textarea { font-family: inherit; }
 .map-pin {
   position: absolute;
   border-radius: 50%;
-  border: 1.5px solid rgba(0,0,0,0.35);
+  border: 2px solid rgba(0,0,0,0.35);
   transform: translate(-50%, -50%);
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-.map-pin.type-room { background: var(--room); width: 18px; height: 18px; }
-.map-pin.type-branch { background: var(--branch); width: 9px; height: 9px; cursor: default; }
-.map-pin.type-entrance { background: var(--entrance); width: 12px; height: 12px;  }
-.map-pin.type-stairs { background: var(--stairs); width: 12px; height: 12px; cursor: default; }
-.map-pin.type-toilet { background: #7357b8; width: 13px; height: 13px; cursor: default; }
+.map-pin.type-room { background: var(--room); width: 45px; height: 45px; }
+.map-pin.type-exhibit { background: #f28c28; width: 35px; height: 35px; cursor: default; }
+.map-pin.type-branch { background: var(--branch); width: 35px; height: 35px; cursor: default; }
+.map-pin.type-entrance { background: var(--entrance); width: 35px; height: 35px;  }
+.map-pin.type-stairs { background: var(--stairs); width: 35px; height:35px; cursor: default; }
+.map-pin.type-toilet { background: #7357b8; width: 35px; height: 35px; cursor: default; }
 
 .map-pin.highlighted {
   z-index: 25;
-  outline: 2.5px solid #e0402f;
-  outline-offset: 2px;
+  outline: 8px solid #e0402f;
+  outline-offset: 8px;
 }
 
-/* ノードの周りに表示する固定の赤い丸 */
-.map-pin.highlighted::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 24px;
-  height: 24px;
-  transform: translate(-50%, -50%);
-  border: 2.5px solid #e0402f;
-  border-radius: 50%;
-  box-sizing: border-box;
-  pointer-events: none;
-}
 
 .map-legend {
   display: flex;
