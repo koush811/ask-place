@@ -170,7 +170,7 @@ export function MapLegend() {
   const otherLabels = {
     room: '部屋',
     exhibit: '展示',
-    entrance: '入口',
+    entrance: '受付',
     stairs: '階段 / EV',
     toilet: 'トイレ',
   }

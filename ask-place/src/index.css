@@ -595,7 +595,7 @@ input, select, textarea { font-family: inherit; }
 .map-pin.type-room { background: var(--room); width: 45px; height: 45px; }
 .map-pin.type-exhibit { background: #f28c28; width: 35px; height: 35px; cursor: default; }
 .map-pin.type-branch { background: var(--branch); width: 35px; height: 35px; cursor: default; }
-.map-pin.type-entrance { background: var(--entrance); width: 35px; height: 35px;  }
+.map-pin.type-entrance { background: var(--entrance); width: 45px; height: 45px;  }
 .map-pin.type-stairs { background: var(--stairs); width: 35px; height:35px; cursor: default; }
 .map-pin.type-toilet { background: #7357b8; width: 35px; height: 35px; cursor: default; }
 
@@ -2279,14 +2279,13 @@ input, select, textarea { font-family: inherit; }
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
-  gap: 12px;
   min-width: 0;
 }
 
 .places label {
   display: block;
   min-width: 0;
-  padding: 14px;
+  padding: 10px;
   color: #363636;
   background: #ffffff;
 }
@@ -2299,7 +2298,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 .places p {
-  margin: 0;
+  margin-left:20px;
   font-size: 14px;
   line-height: 1.65;
   overflow-wrap: anywhere;

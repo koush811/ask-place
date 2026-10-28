@@ -355,17 +355,27 @@ export default function HomePage() {
             />
           </label>
          <div className="places">
-           <label htmlFor="">
+           <label>
             <h3>武道場</h3>
             <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>剣道部:</span> 武士の一太刀</p>
           </label>
-          <label htmlFor="">
+          <label>
             <h3>テニスコート</h3>
             <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>テニス部:</span> テニス体験</p>
           </label>
-          <label htmlFor="">
+          <label>
             <h3>弓道場</h3>
             <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>弓道部:</span> 弓道体験</p>
+          </label>
+          <label>
+            <h3>コネクトモール</h3>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>バレーボール部:</span> バレー部の活動</p>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>バスケットボール部:</span> バスケットボール部の展示</p>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>硬式野球部:</span> 部活動紹介</p>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>サッカー部:</span> サッカー部の紹介</p>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>陸上部:</span> 陸上部の展示</p>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>ラグビー部:</span> ラグビー部の紹介</p>
+            <p><span style={{fontWeight:"800", borderBottom:"solid 1px green"}}>生徒会:</span> MTE log</p>
           </label>
          </div>
       </div>

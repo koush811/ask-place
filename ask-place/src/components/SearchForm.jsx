@@ -7,7 +7,8 @@ export default function SearchForm({ points, rooms = [], onSelectRoom, onForceRo
   const searchable = useMemo(
     () =>
       points.filter(
-        (p) => p.type === 'room'
+        
+        (p) => p.type === 'room' || p.type === 'entrance'
       ),
     [points],
   )
@@ -15,7 +16,11 @@ export default function SearchForm({ points, rooms = [], onSelectRoom, onForceRo
   const results = useMemo(() => {
     const q = query.trim()
     if (!q) return []
-    return searchable.filter((p) => matchesSearchText(p.name, q))
+    return searchable.filter(
+      (p) =>
+        matchesSearchText(p.name, q) ||
+        (p.type === 'entrance' && matchesSearchText(q)),
+    )
   }, [query, searchable])
 
   const showEmpty = query.trim().length > 0 && results.length === 0
@@ -56,7 +61,9 @@ export default function SearchForm({ points, rooms = [], onSelectRoom, onForceRo
             </option>
             {results.map((r) => (
               <option key={r.id} value={r.id}>
-                {r.name}（{rooms.find((room) => room.id === r.id || room.id === r.name || room.roomName === r.id || room.roomName === r.name)?.title || '展示なし'}）
+                {r.type === 'entrance'
+                  ? `${r.name}`
+                  : `${r.name}（${rooms.find((room) => room.id === r.id || room.id === r.name || room.roomName === r.id || room.roomName === r.name)?.title || '展示なし'}）`}
               </option>
             ))}
           </select>
