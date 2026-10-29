@@ -1,4 +1,5 @@
-import { Outlet, useLocation, Navigate } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import BottomNav from "./components/BottomNav.jsx";
@@ -38,9 +39,17 @@ function MaintenancePage() {
 }
 
 export default function App() {
-  const { isPublished, loading } = useSiteSettings();
+  const { isPublished, loading, error: siteSettingsError } = useSiteSettings();
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
+  const closedPageRedirected = useRef(false);
+
+  useEffect(() => {
+    if (loading || siteSettingsError || isPublished || isAdminPath || closedPageRedirected.current) return;
+
+    closedPageRedirected.current = true;
+    window.location.replace("/closed.html");
+  }, [loading, siteSettingsError, isPublished, isAdminPath]);
 
   if (loading && !isAdminPath) {
     return (
@@ -57,10 +66,6 @@ export default function App() {
 
   // サイト非公開時は /admin 以外のすべてのページを / にリダイレクト
   if (!loading && !isPublished) {
-    if (!isAdminPath && location.pathname !== "/") {
-      return <Navigate to="/" replace />;
-    }
-
     if (!isAdminPath) {
       return (
         <div className="app-shell">

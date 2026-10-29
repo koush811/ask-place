@@ -18,6 +18,7 @@ export function SiteSettingsProvider({ children }) {
     const unsubscribe = onSnapshot(
       docRef,
       (snapshot) => {
+        setError(null);
         if (snapshot.exists()) {
           const data = snapshot.data();
           // isPublished が明示的に false の場合のみ非公開。未設定または true の場合は公開中
