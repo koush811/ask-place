@@ -2,48 +2,68 @@ import imageCompression from "browser-image-compression";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "./firebase";
 
-const COMPRESSION_OPTIONS = {
-  maxSizeMB: 1,
-  maxWidthOrHeight: 1600,
-  useWebWorker: true,
-  fileType: "image/webp",
-};
+const MAX_UPLOAD_BYTES = 1024 * 1024;
+const RESIZE_DIMENSIONS = [1600, 1280, 1024, 800, 640];
+
+async function resizeAndCompressImage(file) {
+  let output;
+  for (const maxWidthOrHeight of RESIZE_DIMENSIONS) {
+    output = await imageCompression(file, {
+      maxSizeMB: 0.9,
+      maxWidthOrHeight,
+      useWebWorker: true,
+      fileType: "image/webp",
+      initialQuality: 0.82,
+      maxIteration: 10,
+    });
+    if (output.size <= MAX_UPLOAD_BYTES) return output;
+  }
+  return output;
+}
 
 /**
  * 部屋の展示画像を圧縮し、Firebase Storageへアップロードする
- * 以前の画像が存在する場合は削除を試みる
+ * Firestore側の保存が完了するまで、以前の画像は削除しない
  * @param {string} roomId - 部屋ID (例: "301")
  * @param {File} file - アップロードする画像ファイル
- * @param {string|null} [previousImageUrl] - 更新前の画像URL (存在する場合)
  * @returns {Promise<string>} 新しい画像のダウンロードURL
  */
-export async function uploadRoomImage(roomId, file, previousImageUrl = null) {
-  // 1. クライアント側で圧縮 (最大1MB, 長辺1600px, WebP形式)
-  const compressedFile = await imageCompression(file, COMPRESSION_OPTIONS);
+export async function uploadRoomImage(roomId, file) {
+  if (!file || !file.type.startsWith("image/")) {
+    throw new Error("画像ファイルを選択してください。");
+  }
+
+  let compressedFile;
+  try {
+    compressedFile = await resizeAndCompressImage(file);
+  } catch (error) {
+    throw new Error(`画像の圧縮に失敗しました: ${error?.message || "この画像形式を読み込めません"}`);
+  }
+
+  const allowedTypes = ["image/webp", "image/jpeg"];
+  if (!allowedTypes.includes(compressedFile.type)) {
+    throw new Error(`圧縮後の画像形式 ${compressedFile.type || "不明"} はアップロードできません。JPEGまたはPNG画像を選び直してください。`);
+  }
+  if (compressedFile.size > MAX_UPLOAD_BYTES) {
+    throw new Error("画像を自動縮小しましたが1MB以下になりませんでした。別の画像を選んでください。");
+  }
 
   // 2. 新しいユニークファイル名でアップロード (上書きキャッシュ問題を防止)
   const uniqueId = typeof crypto.randomUUID === "function" 
     ? crypto.randomUUID() 
     : Math.random().toString(36).slice(2) + Date.now().toString(36);
-  const fileName = `${uniqueId}.webp`;
+  const extension = compressedFile.type === "image/webp" ? "webp" : "jpeg";
+  const fileName = `${uniqueId}.${extension}`;
   const storageRef = ref(storage, `room/${roomId}/${fileName}`);
 
-  await uploadBytes(storageRef, compressedFile, {
-    contentType: "image/webp",
-  });
-  const newImageUrl = await getDownloadURL(storageRef);
-
-  // 3. 旧画像が存在する場合は削除 (失敗しても新画像アップロードは成功扱いとする)
-  if (previousImageUrl) {
-    try {
-      const oldRef = ref(storage, previousImageUrl);
-      await deleteObject(oldRef);
-    } catch (e) {
-      console.warn("[Storage] 旧画像の削除に失敗しました (孤立ファイルとして残ります):", e);
-    }
+  try {
+    await uploadBytes(storageRef, compressedFile, {
+      contentType: compressedFile.type,
+    });
+    return await getDownloadURL(storageRef);
+  } catch (error) {
+    throw new Error(`Firebase Storageへの画像保存に失敗しました (${error?.code || "unknown"}): ${error?.message || "通信または権限を確認してください"}`);
   }
-
-  return newImageUrl;
 }
 
 /**

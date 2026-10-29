@@ -221,7 +221,7 @@ export default function SuperAdminPage({ user, onLogout }) {
       if (selectedFile) {
         operation = "Storage画像アップロード";
         setStatusMsg({ text: "写真をアップロード中...", isError: false });
-        finalImageUrl = await uploadRoomImage(selectedRoomId, selectedFile, currentImageUrl);
+        finalImageUrl = await uploadRoomImage(selectedRoomId, selectedFile);
       }
 
       operation = "Firestore更新";
@@ -235,6 +235,14 @@ export default function SuperAdminPage({ user, onLogout }) {
         imageUrl: finalImageUrl,
         updatedAt: serverTimestamp(),
       });
+
+      if (selectedFile && currentImageUrl) {
+        try {
+          await deleteRoomImage(currentImageUrl);
+        } catch (cleanupError) {
+          console.warn("[SuperAdmin] 保存後の旧画像削除に失敗しました:", cleanupError);
+        }
+      }
 
       // ローカル一覧の更新
       setRooms((prev) =>

@@ -125,7 +125,7 @@ export default function ClassAdminPage({ user, onLogout }) {
       // 1. 新しい写真がある場合、先に圧縮・アップロードを行う
       if (selectedFile) {
         setStatusMsg({ text: "写真を圧縮・アップロード中...", isError: false });
-        finalImageUrl = await uploadRoomImage(roomId, selectedFile, currentImageUrl);
+        finalImageUrl = await uploadRoomImage(roomId, selectedFile);
       }
 
       // 2. Firestore を updateDoc で更新 (updatedAt は serverTimestamp())
@@ -137,6 +137,14 @@ export default function ClassAdminPage({ user, onLogout }) {
         imageUrl: finalImageUrl,
         updatedAt: serverTimestamp(),
       });
+
+      if (selectedFile && currentImageUrl) {
+        try {
+          await deleteRoomImage(currentImageUrl);
+        } catch (cleanupError) {
+          console.warn("[ClassAdmin] 保存後の旧画像削除に失敗しました:", cleanupError);
+        }
+      }
 
       setCurrentImageUrl(finalImageUrl);
       if (previewUrl) URL.revokeObjectURL(previewUrl);
