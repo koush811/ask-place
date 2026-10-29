@@ -36,11 +36,11 @@ function formatUpdatedAt(updatedAt) {
 export default function RoomDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getRoomById, loading } = useRooms();
+  const { getRoomByIdentifier, loading } = useRooms();
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
 
-  const room = getRoomById(id);
+  const room = getRoomByIdentifier(id);
 
   // 存在しない部屋または非公開(enabled: false)の場合は / へリダイレクト (仕様書 第7.1章)
   useEffect(() => {
@@ -128,8 +128,8 @@ export default function RoomDetailPage() {
           展示一覧を見る
         </Link>
         <Link
-          to={`/?room=${encodeURIComponent(room.id)}`}
-          state={{ targetRoomId: room.id }}
+          to={`/?room=${encodeURIComponent(room.roomName || room.id)}`}
+          state={{ targetRoomId: room.id, targetRoomName: room.roomName }}
           className="btn-primary"
         >
           校内マップで場所を確認

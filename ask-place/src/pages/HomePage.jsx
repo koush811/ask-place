@@ -77,13 +77,19 @@ export default function HomePage() {
   }, [publishedRoomIds, extraVisibleNodeIds, routeEndpointIds, routeSegments.length]);
 
   // 詳細画面（校内マップで場所を確認ボタン）からの遷移処理
-  const targetRoomParam = searchParams.get("room") || location.state?.targetRoomId;
+  const targetRoomParams = [
+    searchParams.get("room"),
+    location.state?.targetRoomName,
+    location.state?.targetRoomId,
+  ].filter(Boolean);
   useEffect(() => {
-    if (!targetRoomParam) return;
+    if (targetRoomParams.length === 0) return;
 
-    const targetNode = nodes.find(
-      (n) => n.name === targetRoomParam || n.id === targetRoomParam
-    );
+    // 部屋名を優先する。同じ文字列が別階のノードIDにも使われるため、
+    // IDを先に検索するとN2xxの部屋が3F側のノードへ解決されることがある。
+    const targetNode =
+      nodes.find((n) => targetRoomParams.includes(n.name)) ||
+      nodes.find((n) => targetRoomParams.includes(n.id));
 
     if (targetNode) {
       // 1. その部屋のフロアに切り替え
@@ -101,7 +107,7 @@ export default function HomePage() {
         }
       }, 100);
     }
-  }, [targetRoomParam]);
+  }, [targetRoomParams.join("|")]);
 
   // マップ上のピンを直接タップした時
   const handleSelectRoom = (point) => {

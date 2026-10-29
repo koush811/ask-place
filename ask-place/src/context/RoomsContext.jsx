@@ -47,8 +47,14 @@ export function RoomsProvider({ children }) {
     return rooms.find((r) => r.id === id);
   }, [rooms]);
 
+  const getRoomByIdentifier = useCallback((identifier) => {
+    return rooms.find((room) => room.id === identifier || room.roomName === identifier);
+  }, [rooms]);
+
   return (
-    <RoomsContext.Provider value={{ rooms, loading, error, getRoomById, refreshRooms: fetchRooms }}>
+    <RoomsContext.Provider
+      value={{ rooms, loading, error, getRoomById, getRoomByIdentifier, refreshRooms: fetchRooms }}
+    >
       {children}
     </RoomsContext.Provider>
   );
@@ -61,6 +67,7 @@ export function RoomsProvider({ children }) {
  *   loading: boolean,
  *   error: any,
  *   getRoomById: (id: string) => import("../types/room").Room | undefined,
+ *   getRoomByIdentifier: (identifier: string) => import("../types/room").Room | undefined,
  *   refreshRooms: () => Promise<void>
  * }}
  */
