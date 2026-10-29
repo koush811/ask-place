@@ -24,6 +24,10 @@ const FLOOR_SIZES = {
   floor_5F: { w: 1968, h: 221 },
 }
 
+// Keep every floor's interaction layer at the same height while preserving
+// each source SVG's original dimensions.
+const MAP_VIEWPORT_ASPECT_RATIO = FLOOR_SIZES.floor_4F.w / FLOOR_SIZES.floor_4F.h
+
 export default function MapView({ points, zones = [], activeFloor, highlightedId, onSelectRoom, routePoints, forcedRoom,onClearForcedRoom,  }) {
   const containerRef = useRef(null)
   const [naturalSize, setNaturalSize] = useState(null)
@@ -47,9 +51,10 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
   const floorZones = zones.filter((z) => z.floor === activeFloor)
   const floorRoutePoints = (routePoints || []).filter((point) => point.floor === activeFloor)
 
-  const frameStyle = naturalSize
-    ? { aspectRatio: `${naturalSize.w} / ${naturalSize.h}` }
-    : { aspectRatio: '4 / 3' }
+  const mapDisplayHeight = naturalSize
+    ? naturalSize.w / MAP_VIEWPORT_ASPECT_RATIO
+    : 0
+  const frameStyle = { aspectRatio: `${MAP_VIEWPORT_ASPECT_RATIO}` }
 
   return (
     <div className="map-frame" style={frameStyle} ref={containerRef}>
@@ -72,7 +77,10 @@ export default function MapView({ points, zones = [], activeFloor, highlightedId
             >
               <div
                 className="map-image-layer"
-                style={{ width: naturalSize.w, height: naturalSize.h }}
+                style={{
+                  width: naturalSize.w,
+                  height: mapDisplayHeight,
+                }}
               >
                 <img src={src} alt={`${activeFloor} フロアマップ`} width={naturalSize.w} height={naturalSize.h} draggable={false} />
                 {floorZones.length > 0 && (
