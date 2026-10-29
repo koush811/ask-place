@@ -42,6 +42,11 @@ export default function RoomDetailPage() {
 
   const room = getRoomByIdentifier(id);
 
+  useEffect(() => {
+    setImgLoaded(false);
+    setImgError(false);
+  }, [id, room?.imageUrl]);
+
   // 存在しない部屋または非公開(enabled: false)の場合は / へリダイレクト (仕様書 第7.1章)
   useEffect(() => {
     if (!loading && !room) {

@@ -26,6 +26,7 @@ export default function ClassAdminPage({ user, onLogout }) {
   // 編集フォーム状態
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [roomStatus, setRoomStatus] = useState("empty");
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -48,6 +49,11 @@ export default function ClassAdminPage({ user, onLogout }) {
           if (isMounted) {
             setTitle(data.title || "");
             setDescription(data.description || "");
+            setRoomStatus(
+              ["empty", "somewhat_crowded", "crowded"].includes(data.status)
+                ? data.status
+                : "empty"
+            );
             setCurrentImageUrl(data.imageUrl || null);
           }
         }
@@ -93,6 +99,7 @@ export default function ClassAdminPage({ user, onLogout }) {
     try {
       await updateDoc(doc(db, "rooms", roomId), {
         imageUrl: null,
+        status: roomStatus,
         updatedAt: serverTimestamp(),
       });
       setCurrentImageUrl(null);
@@ -143,6 +150,7 @@ export default function ClassAdminPage({ user, onLogout }) {
       await updateDoc(roomRef, {
         title: title.trim(),
         description: description.trim(),
+        status: roomStatus,
         imageUrl: finalImageUrl,
         updatedAt: serverTimestamp(),
       });

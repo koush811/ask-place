@@ -35,7 +35,6 @@ export function NotificationProvider({ children }) {
       (snapshotError) => {
         console.error("[Notification] 通知取得エラー:", snapshotError);
         setError(snapshotError);
-        setNotification(null);
         setLoading(false);
       }
     );
