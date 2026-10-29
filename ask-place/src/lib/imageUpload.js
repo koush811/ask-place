@@ -2,14 +2,14 @@ import imageCompression from "browser-image-compression";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "./firebase";
 
-const MAX_UPLOAD_BYTES = 1024 * 1024;
+const MAX_UPLOAD_BYTES = 500 * 1024;
 const RESIZE_DIMENSIONS = [1600, 1280, 1024, 800, 640];
 
 async function resizeAndCompressImage(file) {
   let output;
   for (const maxWidthOrHeight of RESIZE_DIMENSIONS) {
     output = await imageCompression(file, {
-      maxSizeMB: 0.9,
+      maxSizeMB: 0.45,
       maxWidthOrHeight,
       useWebWorker: true,
       fileType: "image/webp",
@@ -45,7 +45,7 @@ export async function uploadRoomImage(roomId, file) {
     throw new Error(`圧縮後の画像形式 ${compressedFile.type || "不明"} はアップロードできません。JPEGまたはPNG画像を選び直してください。`);
   }
   if (compressedFile.size > MAX_UPLOAD_BYTES) {
-    throw new Error("画像を自動縮小しましたが1MB以下になりませんでした。別の画像を選んでください。");
+    throw new Error("画像を自動縮小しましたが500KB以下になりませんでした。別の画像を選んでください。");
   }
 
   // 2. 新しいユニークファイル名でアップロード (上書きキャッシュ問題を防止)
