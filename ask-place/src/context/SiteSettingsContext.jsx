@@ -32,8 +32,7 @@ export function SiteSettingsProvider({ children }) {
       (err) => {
         console.error("[SiteSettings] サイト設定取得エラー:", err);
         setError(err);
-        // 設定を確認できないときは公開しない。公開状態の誤判定を防ぐ。
-        setIsPublished(false);
+        // エラーは公開状態と分けて扱い、最後に確認できた公開状態を維持する。
         setLoading(false);
       }
     );

@@ -3,8 +3,40 @@ import { useEffect, useRef } from "react";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import BottomNav from "./components/BottomNav.jsx";
-import { RoomsProvider } from "./context/RoomsContext.jsx";
+import { RoomsProvider, useRooms } from "./context/RoomsContext.jsx";
 import { useSiteSettings } from "./context/SiteSettingsContext.jsx";
+
+function RoomsDataNotice() {
+  const { rooms, error, refreshing, refreshRooms } = useRooms();
+  if (!error) return null;
+
+  return (
+    <div role="alert" style={{ margin: "12px", padding: "12px", background: "#fff1f2", color: "#9f1239", borderRadius: "8px" }}>
+      <p style={{ margin: "0 0 8px" }}>
+        {rooms.length > 0
+          ? "最新の部屋データを取得できませんでした。表示中のデータをそのまま表示しています。"
+          : "部屋データを読み込めませんでした。通信状態を確認して再試行してください。"}
+      </p>
+      <button type="button" onClick={refreshRooms} disabled={refreshing}>
+        {refreshing ? "再取得中..." : "再試行"}
+      </button>
+    </div>
+  );
+}
+
+function SiteSettingsErrorPage() {
+  return (
+    <main className="maintenance-page">
+      <div className="maintenance-card" role="alert">
+        <h1 className="maintenance-title">サイト設定を読み込めませんでした</h1>
+        <p className="maintenance-desc">通信状態を確認して、もう一度お試しください。</p>
+        <button type="button" className="maintenance-admin-btn" onClick={() => window.location.reload()}>
+          再読み込み
+        </button>
+      </div>
+    </main>
+  );
+}
 
 function MaintenancePage() {
   return (
@@ -64,6 +96,10 @@ export default function App() {
     );
   }
 
+  if (siteSettingsError && !isAdminPath) {
+    return <SiteSettingsErrorPage />;
+  }
+
   // サイト非公開時は /admin 以外のすべてのページを / にリダイレクト
   if (!loading && !isPublished) {
     if (!isAdminPath) {
@@ -80,6 +116,7 @@ export default function App() {
     <RoomsProvider>
       <div className="app-shell">
         <Header />
+        <RoomsDataNotice />
         <div className="app-main-content">
           <Outlet />
         </div>

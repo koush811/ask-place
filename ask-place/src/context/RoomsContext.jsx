@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
@@ -11,10 +11,13 @@ const RoomsContext = createContext(undefined);
 export function RoomsProvider({ children }) {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
+  const hasLoadedRef = useRef(false);
 
   const fetchRooms = useCallback(async () => {
-    setLoading(true);
+    if (hasLoadedRef.current) setRefreshing(true);
+    else setLoading(true);
     setError(null);
     try {
       const q = query(collection(db, "rooms"), where("enabled", "==", true));
@@ -24,13 +27,14 @@ export function RoomsProvider({ children }) {
         ...d.data(),
       }));
       setRooms(roomList);
+      hasLoadedRef.current = true;
     } catch (err) {
       console.error("[RoomsContext] 部屋データ取得エラー:", err);
       setError(err);
-      // Firebase未接続または未設定時でもアプリが壊れないよう空配列を維持
-      setRooms([]);
+      // 取得済みデータは保持し、エラー状態だけ更新する。
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   }, []);
 
@@ -53,7 +57,7 @@ export function RoomsProvider({ children }) {
 
   return (
     <RoomsContext.Provider
-      value={{ rooms, loading, error, getRoomById, getRoomByIdentifier, refreshRooms: fetchRooms }}
+      value={{ rooms, loading, refreshing, error, getRoomById, getRoomByIdentifier, refreshRooms: fetchRooms }}
     >
       {children}
     </RoomsContext.Provider>

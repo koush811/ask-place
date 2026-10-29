@@ -185,7 +185,6 @@ export default function SuperAdminPage({ user, onLogout }) {
     setSaving(true);
     setStatusMsg({ text: "写真を削除中...", isError: false });
     try {
-      await deleteRoomImage(currentImageUrl);
       await updateDoc(doc(db, "rooms", selectedRoomId), {
         imageUrl: null,
         updatedAt: serverTimestamp(),
@@ -196,6 +195,16 @@ export default function SuperAdminPage({ user, onLogout }) {
       setRooms((prev) =>
         prev.map((r) => (r.id === selectedRoomId ? { ...r, imageUrl: null } : r))
       );
+      try {
+        await deleteRoomImage(currentImageUrl);
+      } catch (storageError) {
+        console.error("[SuperAdmin] Firestore更新後のStorage画像削除に失敗しました:", storageError);
+        setStatusMsg({
+          text: "部屋データから画像を削除しましたが、Storage上の画像削除に失敗しました。不要な画像が残っているため、管理者にお知らせください。",
+          isError: true,
+        });
+        return;
+      }
       setStatusMsg({ text: "写真を正常に削除しました。", isError: false });
     } catch (err) {
       console.error("[SuperAdmin] 写真削除失敗:", err);

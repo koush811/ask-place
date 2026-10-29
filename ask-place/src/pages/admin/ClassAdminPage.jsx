@@ -91,7 +91,6 @@ export default function ClassAdminPage({ user, onLogout }) {
     setSaving(true);
     setStatusMsg({ text: "写真を削除中...", isError: false });
     try {
-      await deleteRoomImage(currentImageUrl);
       await updateDoc(doc(db, "rooms", roomId), {
         imageUrl: null,
         updatedAt: serverTimestamp(),
@@ -99,6 +98,16 @@ export default function ClassAdminPage({ user, onLogout }) {
       setCurrentImageUrl(null);
       setSelectedFile(null);
       setPreviewUrl(null);
+      try {
+        await deleteRoomImage(currentImageUrl);
+      } catch (storageError) {
+        console.error("[ClassAdmin] Firestore更新後のStorage画像削除に失敗しました:", storageError);
+        setStatusMsg({
+          text: "部屋データから画像を削除しましたが、Storage上の画像削除に失敗しました。不要な画像が残っているため、管理者にお知らせください。",
+          isError: true,
+        });
+        return;
+      }
       setStatusMsg({ text: "写真を削除しました。", isError: false });
     } catch (err) {
       console.error("[ClassAdmin] 写真削除失敗:", err);
