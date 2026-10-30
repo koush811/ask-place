@@ -20,9 +20,7 @@ export default function SearchForm({ points, rooms = [], onSelectRoom, onForceRo
     const q = query.trim()
     if (!q) return []
     return searchable.filter(
-      (p) =>
-        matchesSearchText(p.name, q) ||
-        (p.type === 'entrance' && matchesSearchText(q)),
+      (p) => matchesSearchText(p.name, q),
     )
   }, [query, searchable])
 

@@ -63,7 +63,7 @@ export default function HomePage() {
     return nodes.filter((p) => {
       if (p.type !== "room") return true;
       const isPublished = publishedRoomIds.has(p.name);
-      if (routeSegments.length > 0 && !isPublished) return false;
+      if (!isPublished) return false;
       if (
         extraVisibleNodeIds.has(p.id) ||
         extraVisibleNodeIds.has(p.name) ||
@@ -87,7 +87,12 @@ export default function HomePage() {
 
     // 部屋名を優先する。同じ文字列が別階のノードIDにも使われるため、
     // IDを先に検索するとN2xxの部屋が3F側のノードへ解決されることがある。
-    const targetNode = nodes.find((n) => targetRoomParams.includes(n.name));
+    const targetNode = nodes.find(
+      (node) =>
+        node.type === "room" &&
+        publishedRoomIds.has(node.name) &&
+        targetRoomParams.includes(node.name)
+    );
 
     if (targetNode) {
       // 1. その部屋のフロアに切り替え
@@ -105,7 +110,7 @@ export default function HomePage() {
         }
       }, 100);
     }
-  }, [targetRoomParams.join("|")]);
+  }, [targetRoomParams.join("|"), publishedRoomIds]);
 
   // マップ上のピンを直接タップした時
   const handleSelectRoom = (point) => {

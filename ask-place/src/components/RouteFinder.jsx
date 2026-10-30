@@ -30,6 +30,24 @@ export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onCl
     [nodes, rooms],
   )
 
+  const routingMapData = useMemo(() => {
+    const publishedRoomNames = new Set(
+      rooms.flatMap((room) => [room.id, room.roomName]).filter(Boolean),
+    )
+    const routableNodeIds = new Set(
+      nodes
+        .filter((node) => node.type !== 'room' || publishedRoomNames.has(node.name))
+        .map((node) => node.id),
+    )
+    return {
+      ...mapData,
+      nodes: nodes.filter((node) => node.type !== 'room' || routableNodeIds.has(node.id)),
+      edges: (mapData.edges || []).filter(
+        (edge) => routableNodeIds.has(edge.from) && routableNodeIds.has(edge.to),
+      ),
+    }
+  }, [mapData, nodes, rooms])
+
   const startResults = useMemo(() => {
     const q = startQuery.trim()
     if (!q || startId) return []
@@ -56,11 +74,15 @@ export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onCl
   const handleStartChange = (value) => {
     setStartQuery(value)
     setStartId('')
+    setError('')
+    onClear()
   }
 
   const handleEndChange = (value) => {
     setEndQuery(value)
     setEndId('')
+    setError('')
+    onClear()
   }
 
   const pickStart = (p) => {
@@ -88,7 +110,7 @@ export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onCl
       setError('出発地と目的地が同じです')
       return
     }
-    const result = findRoute(mapData, startId, endId)
+    const result = findRoute(routingMapData, startId, endId)
     if (!result.reachable) {
       setError('経路が見つかりません(通行不可エリアを経由する必要がある場合も含む)')
       onClear()

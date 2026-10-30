@@ -105,9 +105,9 @@ export default function RoomDetailPage() {
               />
             </div>
           ) : (
-            <div className="detail-no-image">
+            <div className="detail-no-image" role={imgError ? "alert" : undefined}>
               <div className="no-image-icon">📷</div>
-              <p>現在、写真は登録されていません</p>
+              <p>{imgError ? "展示画像を読み込めませんでした。" : "現在、画像の登録はありません。"}</p>
             </div>
           )}
         </section>

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { doc, onSnapshot, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../lib/firebase";
+import { setRoomsCacheEnabled } from "./RoomsContext.jsx";
 
 const SiteSettingsContext = createContext(undefined);
 
@@ -23,9 +24,11 @@ export function SiteSettingsProvider({ children }) {
           const data = snapshot.data();
           // isPublished が明示的に false の場合のみ非公開。未設定または true の場合は公開中
           setIsPublished(data.isPublished !== false);
+          setRoomsCacheEnabled(data.isPublished !== false);
         } else {
           // ドキュメントが存在しない初期状態は公開中
           setIsPublished(true);
+          setRoomsCacheEnabled(true);
         }
         setLoading(false);
       },

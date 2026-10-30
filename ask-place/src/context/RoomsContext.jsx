@@ -4,9 +4,28 @@ import { db } from "../lib/firebase";
 
 const RoomsContext = createContext(undefined);
 const ROOMS_CACHE_KEY = "ask-place:published-rooms:v1";
+const ROOMS_CACHE_DISABLED_KEY = "ask-place:published-rooms-cache-disabled:v1";
+
+export function setRoomsCacheEnabled(enabled) {
+  try {
+    if (enabled) {
+      window.localStorage.removeItem(ROOMS_CACHE_DISABLED_KEY);
+      return;
+    }
+
+    window.localStorage.removeItem(ROOMS_CACHE_KEY);
+    window.localStorage.setItem(ROOMS_CACHE_DISABLED_KEY, "1");
+  } catch (err) {
+    console.warn("[RoomsContext] 部屋データキャッシュの公開状態更新に失敗しました:", err);
+  }
+}
 
 function readRoomsCache() {
   try {
+    if (window.localStorage.getItem(ROOMS_CACHE_DISABLED_KEY) === "1") {
+      return null;
+    }
+
     const serialized = window.localStorage.getItem(ROOMS_CACHE_KEY);
     if (!serialized) return null;
 
@@ -24,6 +43,10 @@ function readRoomsCache() {
 
 function writeRoomsCache(rooms) {
   try {
+    if (window.localStorage.getItem(ROOMS_CACHE_DISABLED_KEY) === "1") {
+      return;
+    }
+
     const cacheRooms = rooms.map((room) => ({
       ...room,
       updatedAt: typeof room.updatedAt?.toDate === "function"

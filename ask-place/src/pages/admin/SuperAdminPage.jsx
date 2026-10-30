@@ -44,6 +44,7 @@ export default function SuperAdminPage({ user, onLogout }) {
   const [editFloor, setEditFloor] = useState(1);
   const [editEnabled, setEditEnabled] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
+  const [imageLoadError, setImageLoadError] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [notificationTitle, setNotificationTitle] = useState("");
@@ -111,6 +112,7 @@ export default function SuperAdminPage({ user, onLogout }) {
     setEditFloor(room.floor || 1);
     setEditEnabled(room.enabled ?? false);
     setCurrentImageUrl(room.imageUrl || null);
+    setImageLoadError(false);
     setSelectedFile(null);
     setPreviewUrl(null);
     setStatusMsg({ text: "", isError: false });
@@ -190,6 +192,7 @@ export default function SuperAdminPage({ user, onLogout }) {
         updatedAt: serverTimestamp(),
       });
       setCurrentImageUrl(null);
+      setImageLoadError(false);
       setSelectedFile(null);
       setPreviewUrl(null);
       setRooms((prev) =>
@@ -270,6 +273,7 @@ export default function SuperAdminPage({ user, onLogout }) {
       );
 
       setCurrentImageUrl(finalImageUrl);
+      setImageLoadError(false);
       setSelectedFile(null);
       setPreviewUrl(null);
       setStatusMsg({ text: `✨ [${selectedRoomId}] を保存しました！`, isError: false });
@@ -567,7 +571,17 @@ export default function SuperAdminPage({ user, onLogout }) {
                     </div>
                   ) : currentImageUrl ? (
                     <div className="photo-preview-wrap">
-                      <img src={currentImageUrl} alt="公開中の写真" className="photo-preview" />
+                      {imageLoadError ? (
+                        <p role="alert">Storage画像を読み込めませんでした。</p>
+                      ) : (
+                        <img
+                          src={currentImageUrl}
+                          alt="公開中の写真"
+                          className="photo-preview"
+                          onError={() => setImageLoadError(true)}
+                          onLoad={() => setImageLoadError(false)}
+                        />
+                      )}
                       <button
                         type="button"
                         className="delete-photo-btn"

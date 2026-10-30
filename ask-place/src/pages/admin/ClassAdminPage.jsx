@@ -14,6 +14,8 @@ export default function ClassAdminPage({ user, onLogout }) {
   const roomId = user?.roomId;
 
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
   const [statusMsg, setStatusMsg] = useState({ text: "", isError: false });
 
@@ -28,6 +30,7 @@ export default function ClassAdminPage({ user, onLogout }) {
   const [description, setDescription] = useState("");
   const [roomStatus, setRoomStatus] = useState("empty");
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
+  const [imageLoadError, setImageLoadError] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
@@ -41,6 +44,8 @@ export default function ClassAdminPage({ user, onLogout }) {
     }
 
     let isMounted = true;
+    setLoading(true);
+    setLoadError(false);
     (async () => {
       try {
         const roomDoc = await getDoc(doc(db, "rooms", roomId));
@@ -55,12 +60,13 @@ export default function ClassAdminPage({ user, onLogout }) {
                 : "empty"
             );
             setCurrentImageUrl(data.imageUrl || null);
+            setImageLoadError(false);
           }
         }
       } catch (err) {
         console.error("[ClassAdmin] データ読み込み失敗:", err);
         if (isMounted) {
-          setStatusMsg({ text: "部屋データの読み込みに失敗しました。", isError: true });
+          setLoadError(true);
         }
       } finally {
         if (isMounted) setLoading(false);
@@ -70,7 +76,7 @@ export default function ClassAdminPage({ user, onLogout }) {
     return () => {
       isMounted = false;
     };
-  }, [roomId]);
+  }, [roomId, loadAttempt]);
 
   // 画像ファイル選択時のプレビュー生成
   const handleFileChange = (e) => {
@@ -198,6 +204,23 @@ export default function ClassAdminPage({ user, onLogout }) {
     );
   }
 
+  if (loadError) {
+    return (
+      <div className="admin-page-container">
+        <div className="admin-error-card" role="alert">
+          <p>教室情報を読み込めませんでした。通信状態を確認して再試行してください。</p>
+          <button
+            type="button"
+            className="admin-submit-btn"
+            onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+          >
+            教室情報を再取得
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-page-container">
       <header className="admin-page-header">
@@ -263,7 +286,17 @@ export default function ClassAdminPage({ user, onLogout }) {
               </div>
             ) : currentImageUrl ? (
               <div className="photo-preview-wrap">
-                <img src={currentImageUrl} alt="現在の展示写真" className="photo-preview" />
+                {imageLoadError ? (
+                  <p role="alert">Storage画像を読み込めませんでした。</p>
+                ) : (
+                  <img
+                    src={currentImageUrl}
+                    alt="現在の展示写真"
+                    className="photo-preview"
+                    onError={() => setImageLoadError(true)}
+                    onLoad={() => setImageLoadError(false)}
+                  />
+                )}
                 <span className="photo-preview-tag">現在公開中の画像</span>
                 <button
                   type="button"
