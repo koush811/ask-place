@@ -7,10 +7,13 @@ export default function SearchForm({ points, rooms = [], onSelectRoom, onForceRo
   const searchable = useMemo(
     () =>
       points.filter(
-        
-        (p) => p.type === 'room' || p.type === 'entrance'
+        (p) =>
+          p.type === 'entrance' ||
+          (p.type === 'room' && rooms.some((room) =>
+            room.id === p.name || room.roomName === p.name
+          ))
       ),
-    [points],
+    [points, rooms],
   )
 
   const results = useMemo(() => {
@@ -63,7 +66,7 @@ export default function SearchForm({ points, rooms = [], onSelectRoom, onForceRo
               <option key={r.id} value={r.id}>
                 {r.type === 'entrance'
                   ? `${r.name}`
-                  : `${r.name}（${rooms.find((room) => room.id === r.id || room.id === r.name || room.roomName === r.id || room.roomName === r.name)?.title || '展示なし'}）`}
+                  : `${r.name}（${rooms.find((room) => room.id === r.name || room.roomName === r.name)?.title || '展示なし'}）`}
               </option>
             ))}
           </select>

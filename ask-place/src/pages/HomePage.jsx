@@ -62,7 +62,7 @@ export default function HomePage() {
   const visiblePoints = useMemo(() => {
     return nodes.filter((p) => {
       if (p.type !== "room") return true;
-      const isPublished = publishedRoomIds.has(p.name) || publishedRoomIds.has(p.id);
+      const isPublished = publishedRoomIds.has(p.name);
       if (routeSegments.length > 0 && !isPublished) return false;
       if (
         extraVisibleNodeIds.has(p.id) ||
@@ -87,9 +87,7 @@ export default function HomePage() {
 
     // 部屋名を優先する。同じ文字列が別階のノードIDにも使われるため、
     // IDを先に検索するとN2xxの部屋が3F側のノードへ解決されることがある。
-    const targetNode =
-      nodes.find((n) => targetRoomParams.includes(n.name)) ||
-      nodes.find((n) => targetRoomParams.includes(n.id));
+    const targetNode = nodes.find((n) => targetRoomParams.includes(n.name));
 
     if (targetNode) {
       // 1. その部屋のフロアに切り替え
@@ -141,9 +139,7 @@ export default function HomePage() {
   const selectedRoomDetail = selectedRoom
     ? rooms.find(
         (room) =>
-          room.id === selectedRoom.id ||
           room.id === selectedRoom.name ||
-          room.roomName === selectedRoom.id ||
           room.roomName === selectedRoom.name
       )
     : null;

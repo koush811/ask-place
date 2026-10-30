@@ -20,7 +20,9 @@ export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onCl
         .filter(
           (p) =>
             p.type === 'entrance' ||
-            (p.type === 'room' && (publishedRoomIds.has(p.id) || publishedRoomIds.has(p.name))),
+            // Node IDs are internal graph identifiers and can collide with a
+            // room number on another floor. Match published rooms by name.
+            (p.type === 'room' && publishedRoomIds.has(p.name)),
         )
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name, 'ja'))
@@ -46,8 +48,7 @@ export default function RouteFinder({ mapData, rooms = [], onRouteComputed, onCl
   const getOptionLabel = (point) => {
     if (point.type !== 'room') return point.name
     const room = rooms.find((item) =>
-      item.id === point.id || item.id === point.name ||
-      item.roomName === point.id || item.roomName === point.name
+      item.id === point.name || item.roomName === point.name
     )
     return `${point.name}（${room?.title || '展示未登録'}）`
   }
