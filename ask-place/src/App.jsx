@@ -113,16 +113,22 @@ export default function App() {
   }
 
   return (
-    <RoomsProvider>
-      <div className="app-shell">
-        <Header />
-        <RoomsDataNotice />
+    <div className="app-shell">
+      <Header />
+      {isAdminPath ? (
         <div className="app-main-content">
           <Outlet />
         </div>
-        {!isAdminPath && <BottomNav />}
-        <Footer />
-      </div>
-    </RoomsProvider>
+      ) : (
+        <RoomsProvider>
+          <RoomsDataNotice />
+          <div className="app-main-content">
+            <Outlet />
+          </div>
+        </RoomsProvider>
+      )}
+      {!isAdminPath && <BottomNav />}
+      <Footer />
+    </div>
   );
 }
