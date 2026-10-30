@@ -75,6 +75,15 @@ export function RoomsProvider({ children }) {
     }
   }, []);
 
+  const refreshRooms = useCallback(() => {
+    try {
+      window.localStorage.removeItem(ROOMS_CACHE_KEY);
+    } catch (err) {
+      console.warn("[RoomsContext] 公開部屋キャッシュの削除に失敗しました:", err);
+    }
+    return fetchRooms();
+  }, [fetchRooms]);
+
   useEffect(() => {
     const cached = readRoomsCache();
     if (cached) {
@@ -102,7 +111,7 @@ export function RoomsProvider({ children }) {
 
   return (
     <RoomsContext.Provider
-      value={{ rooms, loading, refreshing, error, getRoomById, getRoomByIdentifier, refreshRooms: fetchRooms }}
+      value={{ rooms, loading, refreshing, error, getRoomById, getRoomByIdentifier, refreshRooms }}
     >
       {children}
     </RoomsContext.Provider>

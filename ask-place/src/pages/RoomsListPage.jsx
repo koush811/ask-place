@@ -58,7 +58,7 @@ export default function RoomsListPage() {
           onClick={refreshRooms}
           disabled={refreshing}
         >
-          {refreshing ? "再取得中..." : "最新情報を再取得"}
+          {refreshing ? "最新情報を取得中..." : "最新の情報に更新"}
         </button>
       </div>
 
