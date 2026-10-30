@@ -7,7 +7,7 @@ import RoomList from "../components/RoomList";
  * 展示一覧ページ (/rooms) - 仕様書 第6章
  */
 export default function RoomsListPage() {
-  const { rooms, loading } = useRooms();
+  const { rooms, loading, refreshing, refreshRooms } = useRooms();
   const [sortKey, setSortKey] = useState("floor");
   const [selectedFloor, setSelectedFloor] = useState("all");
   const [searchWord, setSearchWord] = useState("");
@@ -52,6 +52,14 @@ export default function RoomsListPage() {
         <p className="page-subtitle">
           各教室の展示内容を確認できます。
         </p>
+        <button
+          type="button"
+          className="rooms-refresh-btn"
+          onClick={refreshRooms}
+          disabled={refreshing}
+        >
+          {refreshing ? "再取得中..." : "最新情報を再取得"}
+        </button>
       </div>
 
       <div className="rooms-controls">

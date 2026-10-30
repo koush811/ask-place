@@ -4,7 +4,6 @@ import { db } from "../lib/firebase";
 
 const RoomsContext = createContext(undefined);
 const ROOMS_CACHE_KEY = "ask-place:published-rooms:v1";
-const ROOMS_CACHE_TTL_MS = 5 * 60 * 1000;
 
 function readRoomsCache() {
   try {
@@ -16,10 +15,7 @@ function readRoomsCache() {
       return null;
     }
 
-    return {
-      rooms: cache.rooms,
-      isFresh: Date.now() - cache.savedAt < ROOMS_CACHE_TTL_MS,
-    };
+    return cache.rooms;
   } catch (err) {
     console.warn("[RoomsContext] 公開部屋キャッシュの読み込みに失敗しました:", err);
     return null;
@@ -82,10 +78,10 @@ export function RoomsProvider({ children }) {
   useEffect(() => {
     const cached = readRoomsCache();
     if (cached) {
-      setRooms(cached.rooms);
+      setRooms(cached);
       hasLoadedRef.current = true;
       setLoading(false);
-      if (cached.isFresh) return;
+      return;
     }
 
     fetchRooms();
