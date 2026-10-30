@@ -3,6 +3,46 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
 const RoomsContext = createContext(undefined);
+const ROOMS_CACHE_KEY = "ask-place:published-rooms:v1";
+const ROOMS_CACHE_TTL_MS = 5 * 60 * 1000;
+
+function readRoomsCache() {
+  try {
+    const serialized = window.localStorage.getItem(ROOMS_CACHE_KEY);
+    if (!serialized) return null;
+
+    const cache = JSON.parse(serialized);
+    if (!Array.isArray(cache.rooms) || typeof cache.savedAt !== "number") {
+      return null;
+    }
+
+    return {
+      rooms: cache.rooms,
+      isFresh: Date.now() - cache.savedAt < ROOMS_CACHE_TTL_MS,
+    };
+  } catch (err) {
+    console.warn("[RoomsContext] 公開部屋キャッシュの読み込みに失敗しました:", err);
+    return null;
+  }
+}
+
+function writeRoomsCache(rooms) {
+  try {
+    const cacheRooms = rooms.map((room) => ({
+      ...room,
+      updatedAt: typeof room.updatedAt?.toDate === "function"
+        ? room.updatedAt.toDate().toISOString()
+        : room.updatedAt,
+    }));
+    window.localStorage.setItem(
+      ROOMS_CACHE_KEY,
+      JSON.stringify({ rooms: cacheRooms, savedAt: Date.now() })
+    );
+  } catch (err) {
+    // Storage is optional; the live Firestore result remains usable.
+    console.warn("[RoomsContext] 公開部屋キャッシュの保存に失敗しました:", err);
+  }
+}
 
 /**
  * 全ページ共通の部屋データ共有Provider
@@ -27,6 +67,7 @@ export function RoomsProvider({ children }) {
         ...d.data(),
       }));
       setRooms(roomList);
+      writeRoomsCache(roomList);
       hasLoadedRef.current = true;
     } catch (err) {
       console.error("[RoomsContext] 部屋データ取得エラー:", err);
@@ -39,6 +80,14 @@ export function RoomsProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    const cached = readRoomsCache();
+    if (cached) {
+      setRooms(cached.rooms);
+      hasLoadedRef.current = true;
+      setLoading(false);
+      if (cached.isFresh) return;
+    }
+
     fetchRooms();
   }, [fetchRooms]);
 
